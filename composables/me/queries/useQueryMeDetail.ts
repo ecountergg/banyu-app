@@ -27,6 +27,7 @@ export const useMutationGetMeDetail = (
                 userType: user.userType,
                 userTypeId: user.userTypeId,
                 photo: user.photoProfile,
+                areas: user.areas,
             });
         },
     });

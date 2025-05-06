@@ -2,8 +2,10 @@
 import type { GeneralConfigListResponse } from '~/models/GeneralConfig';
 import { BreadcrumbBuilder } from '~/builders/BreadcrumbBuilder';
 import { TableColumnBuilder } from '~/builders/TableColumnBuilder';
+import VBadge from '~/components/base/VBadge/VBadge.vue';
 import VLink from '~/components/base/VLink/VLink.vue';
 import { useQueryGeneralConfigList } from '~/composables/general-config/queries/useQueryGeneralConfigList';
+import { GENERAL_CONFIG_DATA_TYPE_VARIANTS } from '~/constants';
 import { PaginationSearchParam } from '~/models/params/PaginationSearchParam';
 
 definePageMeta({
@@ -30,10 +32,9 @@ pageStore.setBreadcrumbList(
 const params = reactive(new PaginationSearchParam());
 const search = reactive({
     count: 0,
-    fullName: '',
 });
 
-const { results, total, isLoading } = useQueryGeneralConfigList(params, search.count);
+const { results, total, isFetching } = useQueryGeneralConfigList(params, search.count);
 
 const columns = computed(() =>
     new TableColumnBuilder<GeneralConfigListResponse>()
@@ -43,9 +44,17 @@ const columns = computed(() =>
             name: 'Kode',
             render: row => h(VLink, {
                 variant: 'unstyled',
-                class: 'text-gold-500 hover:underline underline-offset-4 decoration-transparent hover:decoration-gold-500 transition-colors duration-300',
+                class: 'text-primary-500 hover:underline font-bold underline-offset-4 decoration-transparent hover:decoration-gold-500 transition-colors duration-300',
                 to: { name: 'general-config-detail', params: { code: row.code } },
             }, () => truncateString(row.code, 20)),
+        })
+        .setColumn({
+            key: 'dataType',
+            sortKey: 'dataType',
+            name: 'Tipe Pengguna',
+            render: row => h(VBadge, {
+                variant: GENERAL_CONFIG_DATA_TYPE_VARIANTS[row.dataType],
+            }, () => row.dataType),
         })
         .setColumn({
             key: 'dataType',
@@ -82,7 +91,7 @@ const columns = computed(() =>
             :entries="results"
             :columns="columns"
             :total="total"
-            :loading="isLoading"
+            :loading="isFetching"
         />
     </NuxtLayout>
 </template>

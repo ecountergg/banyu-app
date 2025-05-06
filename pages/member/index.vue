@@ -40,23 +40,14 @@ const { results, total, isLoading } = useQueryMemberList(params, search.count);
 const columns = computed(() =>
     new TableColumnBuilder<MemberListResponse>()
         .setColumn({
-            key: 'areaCode',
-            sortKey: 'areaCode',
-            name: 'Kode Area',
+            key: 'fullName',
+            sortKey: 'fullName',
+            name: 'Nama Lengkap',
             render: row => h(VLink, {
                 variant: 'unstyled',
-                class: 'text-gold-500 hover:underline underline-offset-4 decoration-transparent hover:decoration-gold-500 transition-colors duration-300',
+                class: 'text-primary-500 hover:underline font-bold underline-offset-4 decoration-transparent hover:decoration-gold-500 transition-colors duration-300',
                 to: { name: 'member-detail', params: { id: row.id } },
-            }, () => truncateString(row.areaCode, 20)),
-        })
-        .setColumn({
-            key: 'meterNumber',
-            sortKey: 'meterNumber',
-            name: 'No Meter',
-            render: row => h(VText, {
-                as: 'p',
-                variant: 'base',
-            }, () => stringOrFallback(row.meterNumber, '-')),
+            }, () => truncateString(row.fullName, 20)),
         })
         .setColumn({
             key: 'areaDescription',
@@ -68,13 +59,13 @@ const columns = computed(() =>
             }, () => stringOrFallback(row.areaDescription, '-')),
         })
         .setColumn({
-            key: 'fullName',
-            sortKey: 'fullName',
-            name: 'Nama Lengkap',
+            key: 'meterNumber',
+            sortKey: 'meterNumber',
+            name: 'No Meter',
             render: row => h(VText, {
                 as: 'p',
                 variant: 'base',
-            }, () => stringOrFallback(row.fullName, '-')),
+            }, () => stringOrFallback(row.meterNumber, '-')),
         })
         .setColumn({
             key: 'email',
@@ -153,6 +144,7 @@ const handleSearch = () => {
             v-model:page="params.page"
             v-model:per-page="params.size"
             title="Member"
+            with-number
             :entries="results"
             :columns="columns"
             :total="total"

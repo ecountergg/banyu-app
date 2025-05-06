@@ -1,4 +1,4 @@
-import type { DashboardMenu, ErrorType, SelectOption, Status, StatusVariants, UserType, WaterReadingStatus } from '~/types';
+import type { DashboardMenu, ErrorType, GeneralConfigDataType, SelectOption, Status, StatusVariants, UserType, WaterReadingStatus } from '~/types';
 
 export const MONTH: SelectOption<number, string>[] = [
     {
@@ -90,6 +90,7 @@ export const DASHBOARD_MENUS: DashboardMenu[] = [
                 hrefName: 'index',
                 path: '/',
                 icon: 'lucide:gauge',
+                userType: [USER_TYPE.SUPER_ADMIN, USER_TYPE.ADMIN],
             },
         ],
     },
@@ -102,12 +103,14 @@ export const DASHBOARD_MENUS: DashboardMenu[] = [
                 hrefName: 'user',
                 path: '/user',
                 icon: 'lucide:users',
+                userType: [USER_TYPE.SUPER_ADMIN, USER_TYPE.ADMIN],
             },
             {
                 name: 'Member',
                 hrefName: 'member',
                 path: '/member',
                 icon: 'lucide:book-user',
+                userType: [USER_TYPE.SUPER_ADMIN],
             },
         ],
     },
@@ -120,18 +123,21 @@ export const DASHBOARD_MENUS: DashboardMenu[] = [
                 hrefName: 'area',
                 path: '/area',
                 icon: 'lucide:map-pin',
+                userType: [USER_TYPE.SUPER_ADMIN, USER_TYPE.ADMIN],
             },
             {
                 name: 'Pembacaan Meteran',
                 hrefName: 'meter-reading',
                 path: '/meter-reading',
                 icon: 'lucide:ruler',
+                userType: [USER_TYPE.SUPER_ADMIN],
             },
             {
                 name: 'Konfigurasi Umum',
                 hrefName: 'general-config',
                 path: '/general-config',
                 icon: 'lucide:settings',
+                userType: [USER_TYPE.SUPER_ADMIN],
             },
         ],
     },
@@ -157,4 +163,28 @@ export const METER_READING_STATUS_VARIANTS: Record<WaterReadingStatus, StatusVar
     INITIAL: 'primary',
     READ: 'indigo',
     CALCULATE: 'success',
+} as const;
+
+export const GENERAL_CONFIG_DATA_TYPE = {
+    TEXT: 'TEXT',
+    NUMERIC: 'NUMERIC',
+    BOOLEAN: 'BOOLEAN',
+    DATE: 'DATE',
+    LIST: 'LIST',
+    MAP: 'MAP',
+    PATH: 'PATH',
+    URL: 'URL',
+    OTHER: 'OTHER',
+} as const;
+
+export const GENERAL_CONFIG_DATA_TYPE_VARIANTS: Record<GeneralConfigDataType, StatusVariants> = {
+    LIST: 'success',
+    BOOLEAN: 'danger',
+    DATE: 'indigo',
+    MAP: 'info',
+    NUMERIC: 'pink',
+    OTHER: 'primary',
+    PATH: 'secondary',
+    TEXT: 'warning',
+    URL: 'emerald',
 } as const;

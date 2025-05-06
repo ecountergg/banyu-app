@@ -15,6 +15,7 @@ const mockMeDetail: Me = {
     photoProfile: '',
     lastLogin: 0,
     createdAt: 0,
+    areas: ['Area 1'],
 };
 
 const spyOnGetMeDetail = vi.spyOn(MeServiceImpl.prototype, 'getMe').mockResolvedValue(mockMeDetail);

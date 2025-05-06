@@ -5,6 +5,7 @@ import { toast } from 'vue-sonner';
 import * as yup from 'yup';
 import { useMutationGeneralConfigCreate } from '~/composables/general-config/mutations/useMutationGeneralConfigCreate';
 import { useMutationGeneralConfigUpdate } from '~/composables/general-config/mutations/useMutationGeneralConfigUpdate';
+import { GENERAL_CONFIG_DATA_TYPE } from '~/constants';
 import { GeneralConfigDto } from '~/models/dtos/GeneralConfigDto';
 
 const { data, action } = defineProps<{
@@ -15,9 +16,15 @@ const { data, action } = defineProps<{
 const state = reactive({
     ...new GeneralConfigDto()
         .setCode(stringOrEmpty(data?.code))
-        .setDataType(stringOrEmpty(data?.dataType))
+        .setDataType(valueOrFallback(GENERAL_CONFIG_DATA_TYPE.TEXT, data?.dataType))
         .setValue(stringOrEmpty(data?.value)),
     code: stringOrEmpty(data?.code),
+});
+const generalConfigDataTypeList = Object.values(GENERAL_CONFIG_DATA_TYPE).map((status) => {
+    return {
+        label: status,
+        value: status,
+    };
 });
 
 const { showNotification } = useNotification();
@@ -64,7 +71,7 @@ const onSubmit = handleSubmit(async () => {
     const stateGeneralConfig = () => {
         return new GeneralConfigDto()
             .setCode(stringOrEmpty(state.code))
-            .setDataType(stringOrEmpty(state.dataType))
+            .setDataType(valueOrFallback(GENERAL_CONFIG_DATA_TYPE.TEXT, state.dataType))
             .setValue(stringOrEmpty(state.value));
     };
 
@@ -95,12 +102,17 @@ const onSubmit = handleSubmit(async () => {
                     required
                     :disabled="action === 'update'"
                 />
-                <VInput
+                <VSelect
                     v-model="state.dataType"
-                    placeholder="Masukan Tipe data"
-                    name="dataType"
-                    label="Tipe Data"
+                    name="status"
+                    label="Pilih Tipe Data"
+                    :options="generalConfigDataTypeList"
+                    placeholder="Mohon pilih tipe data"
+                    value-key="value"
+                    label-key="label"
                     required
+                    size="lg"
+                    clearable
                 />
                 <VInput
                     v-model="state.value"

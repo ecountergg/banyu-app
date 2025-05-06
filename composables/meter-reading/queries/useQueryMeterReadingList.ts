@@ -12,7 +12,7 @@ export const useQueryMeterReadingList = (
 ) => {
     const MeterReadingService = new MeterReadingServiceImpl();
     const query = useQuery<GenericPagination<MeterReadingListResponse[]>>({
-        queryKey: ['general-config-list', params, searchCount],
+        queryKey: ['meter-reading-list', params, searchCount],
         queryFn: () => MeterReadingService.getMeterReadingList(params),
         ...options,
     });

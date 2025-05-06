@@ -60,7 +60,6 @@ const columns = computed(() =>
         .build(),
 );
 
-// Delete area mutation
 const { mutateAsync: deleteArea } = useMutationAreaDelete({
     onSuccess: () => {
         showNotification({
@@ -135,6 +134,7 @@ const handleDelete = handleArchiveConfirmation(async () => {
                 :hide-footer="true"
                 :sortable="false"
                 class="mt-8"
+                with-number
             />
         </VCard>
     </NuxtLayout>
