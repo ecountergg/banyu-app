@@ -9,4 +9,5 @@ export type Me = {
     createdAt: number;
     lastUpdateBy: string;
     photoProfile: string;
+    areas: string[];
 };

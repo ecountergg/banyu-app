@@ -1,6 +1,8 @@
+import type { GeneralConfigDataType } from '~/types';
+
 export class GeneralConfigDto {
     code!: string;
-    dataType!: string;
+    dataType!: GeneralConfigDataType;
     value!: string;
 
     setCode(code: string): this {
@@ -8,7 +10,7 @@ export class GeneralConfigDto {
         return this;
     }
 
-    setDataType(dataType: string): this {
+    setDataType(dataType: GeneralConfigDataType): this {
         this.dataType = dataType;
         return this;
     }

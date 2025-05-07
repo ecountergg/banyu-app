@@ -3,7 +3,7 @@ export class MeterReadingDto {
     readingDate!: number | Date;
     previousReading!: number;
     currentReading!: number;
-    notes!: string;
+    notes!: string | null;
     version!: number;
 
     setMeterNumber(meterNumber: string): this {
@@ -26,7 +26,7 @@ export class MeterReadingDto {
         return this;
     }
 
-    setNotes(notes: string): this {
+    setNotes(notes: string | null): this {
         this.notes = notes;
         return this;
     }

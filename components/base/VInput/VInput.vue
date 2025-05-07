@@ -24,7 +24,7 @@ type Props = {
     inlineCols?: InputColumnVariants['cols'];
     labelCols?: InputColumnSpanVariants['cols'];
     inputCols?: InputColumnSpanVariants['cols'];
-    modelValue?: string | number;
+    modelValue?: string | number | null;
     name: string;
     type?: InputTypeHTMLAttribute;
     label?: string;

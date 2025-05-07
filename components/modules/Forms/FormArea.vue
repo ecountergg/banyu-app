@@ -56,7 +56,7 @@ const schema = yup.object({
     code: yup.string().required('Kode harus diisi'),
     description: yup.string().required('Deskripsi harus diisi'),
     rates: yup.array().of(yup.object({
-        tierStart: yup.number().typeError('Tingkat awal harus angka').min(1, 'Tingkat awal tidak boleh kurang dari 1').required('Tingkat awal harus diisi'),
+        tierStart: yup.number().typeError('Tingkat awal harus angka').min(0, 'Tingkat awal tidak boleh kurang dari 0').required('Tingkat awal harus diisi'),
         tierEnd: yup.number().typeError('Tingkat akhir harus angka').min(1, 'Tingkat akhir tidak boleh kurang dari 1').required('Tingkat akhir harus diisi'),
         ratePerUnit: yup.number().typeError('Tarif per unit harus angka').min(1, 'Tarif per unit tidak boleh kurang dari 1').required('Tarif per unit harus diisi'),
     })).required('Tarif harus diisi'),
@@ -71,6 +71,7 @@ const columns = computed(() =>
             render: (row, index) => h(VInput, {
                 modelValue: row.tierStart,
                 type: 'number',
+                min: 0,
                 name: `rates[${index}].tierStart`,
                 onChange: (val) => {
                     state.rates[index].tierStart = Number.parseInt(val);
@@ -164,6 +165,7 @@ const onSubmit = handleSubmit(async () => {
                 />
             </VFlex>
             <VTable
+                with-number
                 :columns="columns"
                 :entries="state.rates"
                 :cardable="false"

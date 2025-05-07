@@ -18,8 +18,8 @@ const state = reactive({
     ...new MemberDto()
         .setAreaCode(stringOrEmpty(data?.areaCode))
         .setFullname(stringOrEmpty(data?.fullName))
-        .setEmail(stringOrEmpty(data?.email))
-        .setMobileNumber(stringOrEmpty(data?.mobileNumber)),
+        .setEmail(stringOrNull(data?.email))
+        .setMobileNumber(stringOrNull(data?.mobileNumber)),
     id: stringOrEmpty(data?.id),
 });
 
@@ -59,8 +59,8 @@ const { mutate: updateMember, isPending: isPendingUpdateMember } = useMutationMe
 const schema = yup.object({
     codeArea: yup.string().required('Kode area harus diisi'),
     fullName: yup.string().required('Nama lengkap harus diisi'),
-    email: yup.string().email('Format email tidak valid'),
-    mobileNumber: yup.string(),
+    email: yup.string().email('Format email tidak valid').nullable(),
+    mobileNumber: yup.string().nullable(),
 });
 
 const { handleSubmit } = useForm({
@@ -72,8 +72,8 @@ const onSubmit = handleSubmit(async () => {
         return new MemberDto()
             .setAreaCode(stringOrEmpty(state.codeArea))
             .setFullname(stringOrEmpty(state.fullName))
-            .setEmail(stringOrEmpty(state.email))
-            .setMobileNumber(stringOrEmpty(state.mobileNumber));
+            .setEmail(stringOrNull(state.email))
+            .setMobileNumber(stringOrNull(state.mobileNumber));
     };
 
     if (data) {

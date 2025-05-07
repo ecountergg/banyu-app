@@ -36,6 +36,7 @@ describe('meServiceImpl', () => {
                 photoProfile: '',
                 lastLogin: 0,
                 createdAt: 0,
+                areas: ['Area 1'],
             };
             mockApi.mockResolvedValueOnce(expectedResponse);
 

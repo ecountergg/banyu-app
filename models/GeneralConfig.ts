@@ -1,6 +1,8 @@
+import type { GeneralConfigDataType } from '~/types';
+
 export type GeneralConfigListResponse = {
     code: string;
-    dataType: string;
+    dataType: GeneralConfigDataType;
     value: string;
 };
 export type GeneralConfigDetailResponse = GeneralConfigListResponse;

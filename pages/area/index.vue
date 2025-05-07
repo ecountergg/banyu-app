@@ -45,7 +45,7 @@ const columns = computed(() =>
             name: 'Kode Area',
             render: row => h(VLink, {
                 variant: 'unstyled',
-                class: 'text-gold-500 hover:underline underline-offset-4 decoration-transparent hover:decoration-gold-500 transition-colors duration-300',
+                class: 'text-primary-500 hover:underline font-bold underline-offset-4 decoration-transparent hover:decoration-gold-500 transition-colors duration-300',
                 to: { name: 'area-detail', params: { code: row.code } },
             }, () => truncateString(row.code, 20)),
         })
@@ -121,6 +121,7 @@ const handleSearch = () => {
             :columns="columns"
             :total="total"
             :loading="isLoading"
+            with-number
         />
     </NuxtLayout>
 </template>

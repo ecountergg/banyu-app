@@ -18,10 +18,10 @@ const { data, action } = defineProps<{
 const state = reactive({
     ...new MeterReadingDto()
         .setMeterNumber(stringOrEmpty(data?.meterNumber))
-        .setReadingDate(data ? convertEpochToDate(data.readingDate) : now())
+        .setReadingDate(data ? convertEpochToDate(data.readingDate) : new Date(now()))
         .setPreviousReading(numberOrZero(0))
         .setCurrentReading(numberOrZero(data?.currentReading))
-        .setNotes(stringOrEmpty(data?.notes))
+        .setNotes(stringOrNull(data?.notes))
         .setVersion(numberOrZero(data?.version)),
     id: stringOrEmpty(data?.id),
 });
@@ -63,7 +63,7 @@ const schema = yup.object({
     meterNumber: yup.string().required('No meter harus diisi'),
     readingDate: yup.date().required('Tanggal pembacaan harus diisi'),
     currentReading: yup.number().typeError('Bacaan saat ini harus angka').required('Bacaan saat ini harus diisi'),
-    notes: yup.string(),
+    notes: yup.string().nullable(),
     version: yup.string(),
 });
 
@@ -78,7 +78,7 @@ const onSubmit = handleSubmit(async () => {
             .setReadingDate(numberOrZero(formatDateToEpoch(state.readingDate)))
             .setPreviousReading(numberOrZero(0))
             .setCurrentReading(numberOrZero(state.currentReading))
-            .setNotes(stringOrEmpty(state.notes))
+            .setNotes(stringOrNull(state.notes))
             .setVersion(numberOrZero(state.version));
     };
 

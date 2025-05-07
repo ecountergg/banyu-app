@@ -1,8 +1,8 @@
 export class MemberDto {
     codeArea!: string;
     fullName!: string;
-    email!: string;
-    mobileNumber!: string;
+    email!: string | null;
+    mobileNumber!: string | null;
 
     setAreaCode(codeArea: string): this {
         this.codeArea = codeArea;
@@ -14,12 +14,12 @@ export class MemberDto {
         return this;
     }
 
-    setEmail(email: string): this {
+    setEmail(email: string | null): this {
         this.email = email;
         return this;
     }
 
-    setMobileNumber(mobileNumber: string): this {
+    setMobileNumber(mobileNumber: string | null): this {
         this.mobileNumber = mobileNumber;
         return this;
     }

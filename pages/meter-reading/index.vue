@@ -34,7 +34,6 @@ pageStore.setBreadcrumbList(
 const params = reactive(new MeterReadingPaginationSearchParams());
 const search = reactive({
     count: 0,
-    fullName: '',
 });
 const modal = reactive({
     calculate: false,
@@ -50,7 +49,7 @@ const columns = computed(() =>
             name: 'No Meter',
             render: row => h(VLink, {
                 variant: 'unstyled',
-                class: 'text-gold-500 hover:underline underline-offset-4 decoration-transparent hover:decoration-gold-500 transition-colors duration-300',
+                class: 'text-primary-500 hover:underline font-bold underline-offset-4 decoration-transparent hover:decoration-gold-500 transition-colors duration-300',
                 to: { name: 'meter-reading-detail', params: { id: row.id } },
             }, () => truncateString(row.meterNumber, 20)),
         })
@@ -135,15 +134,6 @@ const columns = computed(() =>
                 variant: 'base',
             }, () => formatEpochToDate(row.lastModifiedDate)),
         })
-        .setColumn({
-            key: 'version',
-            sortKey: 'version',
-            name: 'Versi',
-            render: row => h(VText, {
-                as: 'p',
-                variant: 'base',
-            }, () => stringOrFallback(row.version.toString())),
-        })
         .build(),
 );
 
@@ -198,6 +188,7 @@ const handleCalculate = () => {
             v-model:per-page="params.size"
             title="Pembacaan Meteran"
             :entries="results"
+            with-number
             :columns="columns"
             :total="total"
             :loading="isLoading"

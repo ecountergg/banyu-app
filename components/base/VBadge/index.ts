@@ -22,6 +22,8 @@ export const badgeVariants = cva(
                 tag:
                     'font-lato bg-[#E9F0C1] border-none outline-none ring-0 px-6 py-3 font-bold text-green-900',
                 pink: 'bg-pink-200 text-pink-700 ring-pink-700/10',
+                emerald:
+                    'bg-emerald-50 dark:bg-emerald-400/10 text-emerald-800 dark:text-emerald-500 ring-emerald-700/10 dark:ring-emerald-400/30',
             },
             rounded: {
                 none: 'rounded-none',
@@ -52,6 +54,7 @@ export const indicatorVariant = cva('absolute rounded-full left-2.5 w-2 h-2', {
             danger: 'bg-danger-500',
             tag: 'bg-[#E9F0C1]',
             pink: 'bg-pink-400',
+            emerald: 'bg-emerald-500',
         },
     },
     defaultVariants: {
@@ -71,6 +74,7 @@ export const pulseVariant = cva('absolute animate-ping rounded-full left-2.5 w-2
             secondary: 'bg-muted-500',
             tag: 'bg-[#E9F0C1]',
             pink: 'bg-pink-400',
+            emerald: 'bg-emerald-500',
         },
     },
     defaultVariants: {

@@ -3,7 +3,8 @@ import { toast } from 'vue-sonner';
 import { BreadcrumbBuilder } from '~/builders/BreadcrumbBuilder';
 import { useMutationMemberDelete } from '~/composables/member/mutations/useMutationMemberDelete';
 import { useMutationGetMemberDetail } from '~/composables/member/queries/useQueryMemberDetail';
-import { STATUS_VARIANTS } from '../../../constants/GeneralConstant';
+import { useMutationWaterMeterStatus } from '~/composables/water-meter/mutations/useMutationWaterMeterStatus';
+import { STATUS, STATUS_VARIANTS } from '../../../constants/GeneralConstant';
 
 definePageMeta({
     layout: false,
@@ -32,14 +33,14 @@ pageStore.setBreadcrumbList(
 const id = computed(() => route.params.id.toString());
 pageStore.setTitle('');
 
-const { handleArchiveConfirmation } = useDialog();
+const { handleArchiveConfirmation, handleCustomConfirmation } = useDialog();
 const { showNotification } = useNotification();
 const queryClient = useQueryClient();
 const { mutateAsync: getMemberDetail } = useMutationGetMemberDetail();
 const memberDetail = await getMemberDetail(id.value);
 queryClient.setQueryData(['member-detail'], memberDetail);
 
-const { mutate: deleteMember } = useMutationMemberDelete({
+const { mutate: mutateDeleteMember } = useMutationMemberDelete({
     onSuccess: () => {
         showNotification({
             type: 'success',
@@ -55,9 +56,36 @@ const { mutate: deleteMember } = useMutationMemberDelete({
         toast.info('Hapus member dalam proses ...');
     },
 });
+const { mutate: mutateActiveMember } = useMutationWaterMeterStatus({
+    onSuccess: () => {
+        showNotification({
+            type: 'success',
+            title: 'Aktifkan berhasil!',
+            message: 'Member telah diaktifkan',
+        });
+        queryClient.invalidateQueries({
+            queryKey: ['member-list'],
+        });
+        navigateTo({ name: 'member' });
+    },
+    onMutate: () => {
+        toast.info('Aktifkan member dalam proses ...');
+    },
+});
 
 const handleDelete = handleArchiveConfirmation(async () => {
-    deleteMember(memberDetail.id);
+    mutateDeleteMember(memberDetail.id);
+});
+
+const handleActive = handleCustomConfirmation({
+    title: 'Aktifkan item ini',
+    message: 'Apakah Anda yakin ingin mengaktifkan item ini?',
+    confirmText: 'Ya Aktifkan',
+    icon: 'lucide:check',
+    confirmVariant: 'primary',
+    classHeadingIcon: 'bg-primary-100 text-primary-600 dark:text-primary-600',
+}, async () => {
+    mutateActiveMember(memberDetail.meterNumber);
 });
 </script>
 
@@ -68,9 +96,17 @@ const handleDelete = handleArchiveConfirmation(async () => {
                 direction="row"
                 gap="4"
             >
+                <VButton
+                    v-if="memberDetail.meterStatus === STATUS.INACTIVE"
+                    variant="success"
+                    @click="handleActive"
+                >
+                    Aktifkan
+                    <Icon name="lucide:check" />
+                </VButton>
                 <VLink
                     variant="secondary"
-                    :to="{ name: 'member-edit', params: { code: route.params.code } }"
+                    :to="{ name: 'member-edit', params: { id: route.params.id } }"
                 >
                     Ubah
                     <Icon name="lucide:circle-plus" />

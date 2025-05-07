@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { DashboardMenu } from '~/types';
 import { DASHBOARD_MENUS } from '~/constants';
 import { sidebarHeaderVariants, sidebarVariants } from '.';
 
@@ -23,8 +24,22 @@ function isLinkActive(path: string) {
     return path === '/' ? route.path === path : !!route.path?.startsWith(path);
 }
 
-const dashboardMenu = computed(() => {
-    return DASHBOARD_MENUS.filter(menu => !menu.requireAdmin || authStore.user?.userType === 'SUPER_ADMIN');
+const dashboardMenu = computed<DashboardMenu[]>(() => {
+    if (authStore.user) {
+        return DASHBOARD_MENUS
+            .map((group) => {
+                const filteredChildren = group.children.filter(item =>
+                    item.userType.includes(authStore.user!.userType),
+                );
+                return {
+                    ...group,
+                    children: filteredChildren,
+                };
+            })
+            .filter(group => group.children.length > 0);
+    }
+
+    return [];
 },
 );
 </script>
