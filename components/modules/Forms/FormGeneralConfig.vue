@@ -104,7 +104,7 @@ const onSubmit = handleSubmit(async () => {
                 />
                 <VSelect
                     v-model="state.dataType"
-                    name="status"
+                    name="dataType"
                     label="Pilih Tipe Data"
                     :options="generalConfigDataTypeList"
                     placeholder="Mohon pilih tipe data"

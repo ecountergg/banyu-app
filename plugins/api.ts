@@ -31,7 +31,7 @@ export default defineNuxtPlugin((nuxtApp) => {
             }
             else {
                 await nuxtApp.runWithContext(() =>
-                    toast.error('Something went wrong, please try again!'),
+                    toast.error(response._data.detail),
                 );
             }
         },
