@@ -25,3 +25,15 @@ export type MeterReadingDetailResponse = Omit<MeterReadingListResponse, 'reading
     status: WaterReadingStatus;
 };
 export type MeterReadingResponse = MeterReadingListResponse;
+
+export type MeterReadingEstimate = {
+    consumption: number;
+    amount: number;
+    adminFee: number;
+};
+
+export type MeterReadingEstimateRate = Omit<MeterReadingEstimate, 'adminFee'> & { rate: number };
+
+export type MeterReadingEstimateResponse = MeterReadingEstimate & {
+    rates: MeterReadingEstimateRate[];
+};

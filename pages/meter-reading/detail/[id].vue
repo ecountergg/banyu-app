@@ -1,9 +1,13 @@
 <script setup lang="ts">
-import { toast } from 'vue-sonner';
+import type { MeterReadingEstimateRate } from '~/models/MeterReading';
 
+import { toast } from 'vue-sonner';
 import { BreadcrumbBuilder } from '~/builders/BreadcrumbBuilder';
+import { TableColumnBuilder } from '~/builders/TableColumnBuilder';
+import VText from '~/components/base/VText/VText.vue';
 import { useMutationMeterReadingCalculateById } from '~/composables/meter-reading/mutations/useMutationMeterReadingCalculateById';
 import { useMutationGetMeterReadingDetail } from '~/composables/meter-reading/queries/useQueryMeterReadingDetail';
+import { useMutationGetMeterReadingEstimateDetail } from '~/composables/meter-reading/queries/useQueryMeterReadingEstimateDetail';
 import { METER_READING_STATUS, METER_READING_STATUS_VARIANTS, MONTH } from '~/constants';
 import { MeterReadingDto } from '~/models/dtos/MeterReadingDto';
 
@@ -40,6 +44,41 @@ const queryClient = useQueryClient();
 const { mutateAsync: getMeterReadingDetail } = useMutationGetMeterReadingDetail();
 const meterReadingDetail = await getMeterReadingDetail({ id: id.value });
 queryClient.setQueryData(['meter-reading-detail'], meterReadingDetail);
+const { mutateAsync: getMeterReadingEstimateDetail } = useMutationGetMeterReadingEstimateDetail();
+const meterReadingEstimateDetail = await getMeterReadingEstimateDetail({ id: id.value });
+queryClient.setQueryData(['meter-reading-estimate-detail'], meterReadingEstimateDetail);
+
+const columns = computed(() =>
+    new TableColumnBuilder<MeterReadingEstimateRate>()
+        .setColumn({
+            key: 'consumption',
+            sortKey: 'consumption',
+            name: 'Konsumsi',
+            render: row => h(VText, {
+                as: 'p',
+                variant: 'base',
+            }, () => formatCurrency(row.consumption)),
+        })
+        .setColumn({
+            key: 'amount',
+            sortKey: 'amount',
+            name: 'Jumlah',
+            render: row => h(VText, {
+                as: 'p',
+                variant: 'base',
+            }, () => `Rp ${formatCurrency(row.amount)}`),
+        })
+        .setColumn({
+            key: 'rate',
+            sortKey: 'rate',
+            name: 'Tarif',
+            render: row => h(VText, {
+                as: 'p',
+                variant: 'base',
+            }, () => `Rp ${formatCurrency(row.rate)}`),
+        })
+        .build(),
+);
 
 const { mutate: calculateMeterReading } = useMutationMeterReadingCalculateById(id, {
     onSuccess: () => {
@@ -198,6 +237,53 @@ const handleCalculate = handleCustomConfirmation({
                     {{ formatEpochToDate(meterReadingDetail.lastModifiedDate) }}
                 </VDescription>
             </VGrid>
+        </VCard>
+        <VCard
+            title="Estimasi Pembayaran"
+            class="mt-4"
+        >
+            <VGrid
+                type="cols"
+                md="3"
+                sm="1"
+                gap="4"
+                class="md:grid-cols-3 sm:grid-cols-1"
+            >
+                <VDescription
+                    title="Konsumsi"
+                    title-class="text-secondary"
+                >
+                    {{ formatCurrency(meterReadingEstimateDetail.consumption) }}
+                </VDescription>
+                <VDescription
+                    title="Jumlah"
+                    title-class="text-secondary"
+                >
+                    Rp {{ formatCurrency(meterReadingEstimateDetail.amount) }}
+                </VDescription>
+                <VDescription
+                    title="Biaya Admin"
+                    title-class="text-secondary"
+                >
+                    Rp {{ formatCurrency(meterReadingEstimateDetail.adminFee) }}
+                </VDescription>
+            </VGrid>
+            <VText
+                as="h2"
+                class="font-bold mt-14"
+            >
+                Daftar Tarif
+            </VText>
+
+            <VTable
+                :columns="columns"
+                :entries="meterReadingEstimateDetail.rates"
+                :cardable="false"
+                :hide-header="true"
+                :hide-footer="true"
+                :sortable="false"
+                with-number
+            />
         </VCard>
     </NuxtLayout>
 </template>
