@@ -1,6 +1,6 @@
 import type { MeterReadingCalculateDto } from '~/models/dtos/MeterReadingCalculateDto';
 import type { MeterReadingDto } from '~/models/dtos/MeterReadingDto';
-import type { MeterReadingDetailResponse, MeterReadingListResponse, MeterReadingResponse } from '~/models/MeterReading';
+import type { MeterReadingDetailResponse, MeterReadingEstimateResponse, MeterReadingListResponse, MeterReadingResponse } from '~/models/MeterReading';
 import type { MeterReadingPaginationSearchParams } from '~/models/params/MeterReadingPaginationSearchParams';
 import type { GenericPagination } from '~/types';
 
@@ -11,4 +11,5 @@ export type MeterReadingService = {
     updateMeterReading: (id: string, data: MeterReadingDto) => Promise<MeterReadingResponse>;
     calculate: (data: MeterReadingCalculateDto) => Promise<MeterReadingResponse>;
     calculateByIdMeterReading: (id: string, data: MeterReadingDto) => Promise<MeterReadingResponse>;
+    getMeterReadingEstimateDetail: (id: string) => Promise<MeterReadingEstimateResponse>;
 };

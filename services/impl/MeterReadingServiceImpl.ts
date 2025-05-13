@@ -1,6 +1,6 @@
 import type { MeterReadingCalculateDto } from '~/models/dtos/MeterReadingCalculateDto';
 import type { MeterReadingDto } from '~/models/dtos/MeterReadingDto';
-import type { MeterReadingDetailResponse, MeterReadingListResponse, MeterReadingResponse } from '~/models/MeterReading';
+import type { MeterReadingDetailResponse, MeterReadingEstimateResponse, MeterReadingListResponse, MeterReadingResponse } from '~/models/MeterReading';
 import type { MeterReadingPaginationSearchParams } from '~/models/params/MeterReadingPaginationSearchParams';
 import type { MeterReadingService } from '~/services/MeterReadingService';
 import type { GenericPagination } from '~/types';
@@ -70,5 +70,9 @@ export class MeterReadingServiceImpl implements MeterReadingService {
                 params,
             },
         );
+    }
+
+    async getMeterReadingEstimateDetail(code: string): Promise<MeterReadingEstimateResponse> {
+        return await useNuxtApp().$api<MeterReadingEstimateResponse>(MeterReadingEndpoint.ESTIMATE_BY_ID.replace('[id]', code));
     }
 }
