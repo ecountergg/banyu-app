@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { Rate } from '~/models/Area';
-import { toast } from 'vue-sonner';
 import { BreadcrumbBuilder } from '~/builders/BreadcrumbBuilder';
 import { TableColumnBuilder } from '~/builders/TableColumnBuilder';
 import { useMutationAreaDelete } from '~/composables/area/mutations/useMutationAreaDelete';
@@ -71,9 +70,6 @@ const { mutateAsync: deleteArea } = useMutationAreaDelete({
             queryKey: ['area-list'],
         });
         navigateTo({ name: 'area' });
-    },
-    onMutate: () => {
-        toast.info('Hapus area dalam proses ...');
     },
 });
 

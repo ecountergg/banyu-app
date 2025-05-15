@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { AreaDetailResponse, Rate } from '~/models/Area';
 import { useForm } from 'vee-validate';
-import { toast } from 'vue-sonner';
 import * as yup from 'yup';
 import { TableColumnBuilder } from '~/builders/TableColumnBuilder';
 import VInput from '~/components/base/VInput/VInput.vue';
@@ -32,9 +31,6 @@ const { mutate: createArea, isPending: isPendingCreateArea } = useMutationAreaCr
         });
         navigateTo({ name: 'area' });
     },
-    onMutate: () => {
-        toast.info('Tambah area dalam proses ...');
-    },
 });
 
 const { mutate: updateArea, isPending: isPendingUpdateArea } = useMutationAreaUpdate(state.code, {
@@ -45,10 +41,6 @@ const { mutate: updateArea, isPending: isPendingUpdateArea } = useMutationAreaUp
             message: `Area berhasil diperbarui - ${data.code}`,
         });
         navigateTo({ name: 'area' });
-    },
-
-    onMutate: () => {
-        toast.info('Ubah area dalam proses ...');
     },
 });
 

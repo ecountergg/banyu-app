@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { UserDetailResponse } from '~/models/User';
 import { useForm } from 'vee-validate';
-import { toast } from 'vue-sonner';
 import * as yup from 'yup';
 import { useQueryAreaList } from '~/composables/area/queries/useQueryAreaList';
 import { useMutationUserCreate } from '~/composables/user/mutations/useMutationUserCreate';
@@ -34,9 +33,6 @@ const { mutate: createUser, isPending: isPendingCreateUser } = useMutationUserCr
         });
         navigateTo({ name: 'user' });
     },
-    onMutate: () => {
-        toast.info('Tambah pengguna dalam proses ...');
-    },
 });
 
 const { mutate: updateUser, isPending: isPendingUpdateUser } = useMutationUserUpdate(state.id, {
@@ -47,10 +43,6 @@ const { mutate: updateUser, isPending: isPendingUpdateUser } = useMutationUserUp
             message: `Pengguna berhasi diperbarui - ${data.username}`,
         });
         navigateTo({ name: 'user' });
-    },
-
-    onMutate: () => {
-        toast.info('Ubah pengguna dalam proses ...');
     },
 });
 

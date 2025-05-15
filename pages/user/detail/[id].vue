@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { UserType } from '~/types';
-import { toast } from 'vue-sonner';
 import { BreadcrumbBuilder } from '~/builders/BreadcrumbBuilder';
 import { useMutationUserDelete } from '~/composables/user/mutations/useMutationUserDelete';
 import { useMutationGetUserDetail } from '~/composables/user/queries/useQueryUserDetail';
@@ -51,9 +50,6 @@ const { mutate: deleteUser } = useMutationUserDelete({
             queryKey: ['user-list'],
         });
         navigateTo({ name: 'user' });
-    },
-    onMutate: () => {
-        toast.info('Hapus pengguna dalam proses ...');
     },
 });
 

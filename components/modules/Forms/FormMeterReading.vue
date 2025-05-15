@@ -2,7 +2,6 @@
 import type { MeterReadingDetailResponse } from '~/models/MeterReading';
 import { now } from '@vueuse/core';
 import { useForm } from 'vee-validate';
-import { toast } from 'vue-sonner';
 import * as yup from 'yup';
 import { useQueryMemberList } from '~/composables/member/queries/useQueryMemberList';
 import { useMutationMeterReadingCreate } from '~/composables/meter-reading/mutations/useMutationMeterReadingCreate';
@@ -39,9 +38,6 @@ const { mutate: createMeterReading, isPending: isPendingCreateMeterReading } = u
         });
         navigateTo({ name: 'meter-reading' });
     },
-    onMutate: () => {
-        toast.info('Tambah pembacaan meteran dalam proses ...');
-    },
 });
 
 const { mutate: updateMeterReading, isPending: isPendingUpdateMeterReading } = useMutationMeterReadingUpdate(state.id, {
@@ -52,10 +48,6 @@ const { mutate: updateMeterReading, isPending: isPendingUpdateMeterReading } = u
             message: `Pembacaan meteran berhasil diperbarui - ${data.meterNumber}`,
         });
         navigateTo({ name: 'meter-reading' });
-    },
-
-    onMutate: () => {
-        toast.info('Ubah pembacaan meteran dalam proses ...');
     },
 });
 

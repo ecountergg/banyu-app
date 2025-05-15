@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { toast } from 'vue-sonner';
 import { BreadcrumbBuilder } from '~/builders/BreadcrumbBuilder';
 import { useMutationMemberDelete } from '~/composables/member/mutations/useMutationMemberDelete';
 import { useMutationGetMemberDetail } from '~/composables/member/queries/useQueryMemberDetail';
@@ -52,9 +51,6 @@ const { mutate: mutateDeleteMember } = useMutationMemberDelete({
         });
         navigateTo({ name: 'member' });
     },
-    onMutate: () => {
-        toast.info('Hapus member dalam proses ...');
-    },
 });
 const { mutate: mutateActiveMember } = useMutationWaterMeterStatus({
     onSuccess: () => {
@@ -67,9 +63,6 @@ const { mutate: mutateActiveMember } = useMutationWaterMeterStatus({
             queryKey: ['member-list'],
         });
         navigateTo({ name: 'member' });
-    },
-    onMutate: () => {
-        toast.info('Aktifkan member dalam proses ...');
     },
 });
 
