@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { MeterReadingEstimateRate } from '~/models/MeterReading';
 
-import { toast } from 'vue-sonner';
 import { BreadcrumbBuilder } from '~/builders/BreadcrumbBuilder';
 import { TableColumnBuilder } from '~/builders/TableColumnBuilder';
 import VText from '~/components/base/VText/VText.vue';
@@ -60,6 +59,15 @@ const columns = computed(() =>
             }, () => formatCurrency(row.consumption)),
         })
         .setColumn({
+            key: 'rate',
+            sortKey: 'rate',
+            name: 'Tarif',
+            render: row => h(VText, {
+                as: 'p',
+                variant: 'base',
+            }, () => `Rp ${formatCurrency(row.rate)}`),
+        })
+        .setColumn({
             key: 'amount',
             sortKey: 'amount',
             name: 'Jumlah',
@@ -69,13 +77,13 @@ const columns = computed(() =>
             }, () => `Rp ${formatCurrency(row.amount)}`),
         })
         .setColumn({
-            key: 'rate',
-            sortKey: 'rate',
-            name: 'Tarif',
-            render: row => h(VText, {
+            key: '#',
+            sortKey: 'total',
+            name: 'Total',
+            render: (_, index) => h(VText, {
                 as: 'p',
                 variant: 'base',
-            }, () => `Rp ${formatCurrency(row.rate)}`),
+            }, () => `Rp ${formatCurrency(meterReadingEstimateDetail.rates[index].amount + meterReadingEstimateDetail.adminFee)}`),
         })
         .build(),
 );
@@ -92,9 +100,6 @@ const { mutate: calculateMeterReading } = useMutationMeterReadingCalculateById(i
         });
         navigateTo({ name: 'meter-reading' });
     },
-    onMutate: () => {
-        toast.info('Kalkulasi pembecaan meteran dalam proses ...');
-    },
 });
 
 const handleCalculate = handleCustomConfirmation({
@@ -105,7 +110,7 @@ const handleCalculate = handleCustomConfirmation({
     confirmVariant: 'primary',
     classHeadingIcon: 'bg-primary-100 text-primary-600 dark:text-primary-600',
 }, async () => {
-    calculateMeterReading(new MeterReadingDto().setVersion(meterReadingDetail.version + 1));
+    calculateMeterReading(new MeterReadingDto().setVersion(meterReadingDetail.version));
 });
 </script>
 

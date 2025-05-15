@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { MemberDetailResponse } from '~/models/Member';
 import { useForm } from 'vee-validate';
-import { toast } from 'vue-sonner';
 import * as yup from 'yup';
 import { useQueryAreaList } from '~/composables/area/queries/useQueryAreaList';
 import { useMutationMemberCreate } from '~/composables/member/mutations/useMutationMemberCreate';
@@ -36,9 +35,6 @@ const { mutate: createMember, isPending: isPendingCreateMember } = useMutationMe
         });
         navigateTo({ name: 'member' });
     },
-    onMutate: () => {
-        toast.info('Tambah konfigurasi umum dalam proses ...');
-    },
 });
 
 const { mutate: updateMember, isPending: isPendingUpdateMember } = useMutationMemberUpdate(state.id, {
@@ -49,10 +45,6 @@ const { mutate: updateMember, isPending: isPendingUpdateMember } = useMutationMe
             message: `Member berhasil diperbarui - ${data.fullName}`,
         });
         navigateTo({ name: 'member' });
-    },
-
-    onMutate: () => {
-        toast.info('Ubah konfigurasi umum dalam proses ...');
     },
 });
 

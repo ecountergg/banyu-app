@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useForm } from 'vee-validate';
-import { toast } from 'vue-sonner';
 import * as yup from 'yup';
 import { useQueryAreaList } from '~/composables/area/queries/useQueryAreaList';
 import { useMutationMeterReadingCalculate } from '~/composables/meter-reading/mutations/useMutationMeterReadingCalculate';
@@ -32,10 +31,6 @@ const { mutate: calculateMeterReading, isPending: isPendingCalculateMeterReading
             message: `Kalkulasi pembacaan meteran berhasil diperbarui`,
         });
         emits('submit');
-    },
-
-    onMutate: () => {
-        toast.info('Ubah pembacaan meteran dalam proses ...');
     },
 });
 

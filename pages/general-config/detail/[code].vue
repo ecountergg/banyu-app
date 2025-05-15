@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { toast } from 'vue-sonner';
 import { BreadcrumbBuilder } from '~/builders/BreadcrumbBuilder';
 import { useMutationGeneralConfigDelete } from '~/composables/general-config/mutations/useMutationGeneralConfigDelete';
 import { useMutationGetGeneralConfigDetail } from '~/composables/general-config/queries/useQueryGeneralConfigDetail';
@@ -49,9 +48,6 @@ const { mutate: deleteGeneralConfig } = useMutationGeneralConfigDelete({
             queryKey: ['general-config-list'],
         });
         navigateTo({ name: 'general-config' });
-    },
-    onMutate: () => {
-        toast.info('Hapus konfigurasi umum dalam proses ...');
     },
 });
 

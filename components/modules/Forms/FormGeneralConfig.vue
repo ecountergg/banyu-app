@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { GeneralConfigDetailResponse } from '~/models/GeneralConfig';
 import { useForm } from 'vee-validate';
-import { toast } from 'vue-sonner';
 import * as yup from 'yup';
 import { useMutationGeneralConfigCreate } from '~/composables/general-config/mutations/useMutationGeneralConfigCreate';
 import { useMutationGeneralConfigUpdate } from '~/composables/general-config/mutations/useMutationGeneralConfigUpdate';
@@ -37,9 +36,6 @@ const { mutate: createGeneralConfig, isPending: isPendingCreateGeneralConfig } =
         });
         navigateTo({ name: 'general-config' });
     },
-    onMutate: () => {
-        toast.info('Tambah konfigurasi umum dalam proses ...');
-    },
 });
 
 const { mutate: updateGeneralConfig, isPending: isPendingUpdateGeneralConfig } = useMutationGeneralConfigUpdate(state.code, {
@@ -50,10 +46,6 @@ const { mutate: updateGeneralConfig, isPending: isPendingUpdateGeneralConfig } =
             message: `Konfigurasi umum berhasil diperbarui - ${data.code}`,
         });
         navigateTo({ name: 'general-config' });
-    },
-
-    onMutate: () => {
-        toast.info('Ubah konfigurasi umum dalam proses ...');
     },
 });
 
