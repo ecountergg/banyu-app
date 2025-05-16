@@ -115,6 +115,19 @@ export const DASHBOARD_MENUS: DashboardMenu[] = [
         ],
     },
     {
+        name: 'Transaksi',
+        requireAdmin: true,
+        children: [
+            {
+                name: 'Pembacaan Meteran',
+                hrefName: 'meter-reading',
+                path: '/meter-reading',
+                icon: 'lucide:ruler',
+                userType: [USER_TYPE.SUPER_ADMIN],
+            },
+        ],
+    },
+    {
         name: 'Konfigurasi',
         requireAdmin: true,
         children: [
@@ -124,13 +137,6 @@ export const DASHBOARD_MENUS: DashboardMenu[] = [
                 path: '/area',
                 icon: 'lucide:map-pin',
                 userType: [USER_TYPE.SUPER_ADMIN, USER_TYPE.ADMIN],
-            },
-            {
-                name: 'Pembacaan Meteran',
-                hrefName: 'meter-reading',
-                path: '/meter-reading',
-                icon: 'lucide:ruler',
-                userType: [USER_TYPE.SUPER_ADMIN],
             },
             {
                 name: 'Konfigurasi Umum',
