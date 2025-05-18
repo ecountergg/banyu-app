@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import type { MeterReadingPaginationSearchParams } from '~/models/params/MeterReadingPaginationSearchParams';
+import type { WaterBillPaginationSearchParams } from '~/models/params/WaterBillPaginationSearchParams';
 import { useQueryAreaList } from '~/composables/area/queries/useQueryAreaList';
 import { useQueryMemberList } from '~/composables/member/queries/useQueryMemberList';
-import { METER_READING_STATUS, MONTH } from '~/constants';
+import { MONTH } from '~/constants';
 import { AreaPaginationSearchParams } from '~/models/params/AreaPaginationSearchParams';
 import { MemberPaginationSearchParams } from '~/models/params/MemberPaginationSearchParams';
 
 const props = defineProps<{
-    params: MeterReadingPaginationSearchParams;
+    params: WaterBillPaginationSearchParams;
 }>();
 
 const filter = reactive(props.params);
@@ -18,12 +18,6 @@ const memberQueryParams = reactive(new MemberPaginationSearchParams());
 const memberSearchCount = shallowRef<number>(0);
 const { results: areaList, isLoading: isLoadingAreaList } = useQueryAreaList(areaQueryParams, areaSearchCount);
 const { results: memberList, isLoading: isLoadingMemberist } = useQueryMemberList(memberQueryParams, memberSearchCount);
-const meterReadingStatusList = Object.values(METER_READING_STATUS).map((status) => {
-    return {
-        label: status,
-        value: status,
-    };
-});
 </script>
 
 <template>
@@ -48,29 +42,17 @@ const meterReadingStatusList = Object.values(METER_READING_STATUS).map((status) 
                 :loading="isLoadingAreaList"
             />
             <VSelect
-                v-model:model-value="filter.memberId"
-                name="memberId"
+                v-model:model-value="filter.memberName"
+                name="memberName"
                 label="Pilih Member"
                 :options="memberList"
                 placeholder="Mohon pilih member"
-                value-key="id"
+                value-key="fullName"
                 label-key="fullName"
                 size="lg"
                 clearable
                 :searchable="false"
                 :loading="isLoadingMemberist"
-            />
-            <VInputDate
-                v-model="filter.dateStart"
-                placeholder="Masukan Tanggal Mulai"
-                name="dateStart"
-                label="Tanggal Mulai"
-            />
-            <VInputDate
-                v-model="filter.dateEnd"
-                placeholder="Masukan Tanggal Berakhir"
-                name="dateEnd"
-                label="Tanggal Berakhir"
             />
             <VSelect
                 v-model:model-value="filter.year"
@@ -82,6 +64,7 @@ const meterReadingStatusList = Object.values(METER_READING_STATUS).map((status) 
                 label-key="label"
                 size="lg"
                 clearable
+
                 :searchable="false"
             />
             <VSelect
@@ -90,18 +73,6 @@ const meterReadingStatusList = Object.values(METER_READING_STATUS).map((status) 
                 label="Pilih Bulan"
                 :options="MONTH"
                 placeholder="Mohon pilih bulan"
-                value-key="value"
-                label-key="label"
-                size="lg"
-                clearable
-                :searchable="false"
-            />
-            <VSelect
-                v-model:model-value="filter.status"
-                name="status"
-                label="Pilih Status"
-                :options="meterReadingStatusList"
-                placeholder="Mohon pilih status"
                 value-key="value"
                 label-key="label"
                 size="lg"

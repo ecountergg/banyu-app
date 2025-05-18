@@ -1,19 +1,16 @@
 <script setup lang="ts">
 import type { MeterReadingEstimateRate } from '~/models/MeterReading';
-
 import { BreadcrumbBuilder } from '~/builders/BreadcrumbBuilder';
 import { TableColumnBuilder } from '~/builders/TableColumnBuilder';
 import VText from '~/components/base/VText/VText.vue';
-import { useMutationMeterReadingCalculateById } from '~/composables/meter-reading/mutations/useMutationMeterReadingCalculateById';
-import { useMutationGetMeterReadingDetail } from '~/composables/meter-reading/queries/useQueryMeterReadingDetail';
-import { useMutationGetMeterReadingEstimateDetail } from '~/composables/meter-reading/queries/useQueryMeterReadingEstimateDetail';
-import { METER_READING_STATUS, METER_READING_STATUS_VARIANTS, MONTH } from '~/constants';
-import { MeterReadingDto } from '~/models/dtos/MeterReadingDto';
+import { useMutationGetWaterBillDetail } from '~/composables/water-bill/queries/useQueryWaterBillDetail';
+import { useMutationGetWaterBillDownload } from '~/composables/water-bill/queries/useQueryWaterBillDownload';
+import { MONTH } from '~/constants';
 
 definePageMeta({
     layout: false,
     middleware: ['auth', 'super-admin'],
-    name: 'meter-reading-detail',
+    name: 'water-bill-detail',
 });
 
 useSeoMeta({
@@ -37,15 +34,22 @@ pageStore.setBreadcrumbList(
 const id = computed(() => route.params.id.toString());
 pageStore.setTitle('');
 
-const { handleCustomConfirmation } = useDialog();
 const { showNotification } = useNotification();
 const queryClient = useQueryClient();
-const { mutateAsync: getMeterReadingDetail } = useMutationGetMeterReadingDetail();
-const meterReadingDetail = await getMeterReadingDetail({ id: id.value });
-queryClient.setQueryData(['meter-reading-detail'], meterReadingDetail);
-const { mutateAsync: getMeterReadingEstimateDetail } = useMutationGetMeterReadingEstimateDetail();
-const meterReadingEstimateDetail = await getMeterReadingEstimateDetail({ id: id.value });
-queryClient.setQueryData(['meter-reading-estimate-detail'], meterReadingEstimateDetail);
+const { mutateAsync: getWaterBillDetail } = useMutationGetWaterBillDetail();
+const waterBillDetail = await getWaterBillDetail({ id: id.value });
+queryClient.setQueryData(['meter-reading-detail'], waterBillDetail);
+const { mutateAsync: downloadWaterBill } = useMutationGetWaterBillDownload({
+    onSuccess: (data) => {
+        showNotification({
+            type: 'success',
+            title: 'Sukses Diunduh',
+            message: `Tagihan air berhasil diunduh - ${waterBillDetail.billNumber}`,
+        });
+
+        downloadFilePdf(data, `Tagihan air berhasil diunduh - ${waterBillDetail.billNumber} - ${formatEpochToDateTime(new Date())}`);
+    },
+});
 
 const columns = computed(() =>
     new TableColumnBuilder<MeterReadingEstimateRate>()
@@ -78,31 +82,6 @@ const columns = computed(() =>
         })
         .build(),
 );
-
-const { mutate: calculateMeterReading } = useMutationMeterReadingCalculateById(id, {
-    onSuccess: () => {
-        showNotification({
-            type: 'success',
-            title: 'Kalkulasi berhasil!',
-            message: 'Kalkulasi telah dihapus',
-        });
-        queryClient.invalidateQueries({
-            queryKey: ['meter-reading-detail'],
-        });
-        navigateTo({ name: 'meter-reading' });
-    },
-});
-
-const handleCalculate = handleCustomConfirmation({
-    title: 'Kalkukasi item ini',
-    message: 'Apakah Anda yakin ingin mengkalkulasi item ini?',
-    confirmText: 'Ya Kalkulasi',
-    icon: 'lucide:calculator',
-    confirmVariant: 'primary',
-    classHeadingIcon: 'bg-primary-100 text-primary-600 dark:text-primary-600',
-}, async () => {
-    calculateMeterReading(new MeterReadingDto().setVersion(meterReadingDetail.version));
-});
 </script>
 
 <template>
@@ -112,19 +91,12 @@ const handleCalculate = handleCustomConfirmation({
                 direction="row"
                 gap="4"
             >
-                <VLink
-                    variant="secondary"
-                    :to="{ name: 'meter-reading-edit', params: { id: route.params.id } }"
-                >
-                    Ubah
-                    <Icon name="lucide:circle-plus" />
-                </VLink>
                 <VButton
                     variant="info"
-                    @click="handleCalculate"
+                    @click="downloadWaterBill({ id })"
                 >
-                    Kalkulasi
-                    <Icon name="lucide:calculator" />
+                    Unduh Invoice
+                    <Icon name="lucide:download" />
                 </VButton>
             </VFlex>
         </template>
@@ -137,100 +109,88 @@ const handleCalculate = handleCustomConfirmation({
                 class="md:grid-cols-3 sm:grid-cols-1"
             >
                 <VDescription
+                    title="No Tagihan"
+                    title-class="text-secondary"
+                >
+                    {{ stringOrFallback(waterBillDetail.billNumber, '-') }}
+                </VDescription>
+                <VDescription
+                    title="Tanggal Tagihan"
+                    title-class="text-secondary"
+                >
+                    {{ formatEpochToDate(waterBillDetail.billDate) }}
+                </VDescription>
+                <VDescription
+                    title="Jatuh Tempo"
+                    title-class="text-secondary"
+                >
+                    {{ formatEpochToDate(waterBillDetail.dueDate) }}
+                </VDescription>
+                <VDescription
                     title="No Meter"
                     title-class="text-secondary"
                 >
-                    {{ stringOrFallback(meterReadingDetail.meterNumber, '-') }}
+                    {{ stringOrFallback(waterBillDetail.meterNumber, '-') }}
                 </VDescription>
                 <VDescription
                     title="Kode Area"
                     title-class="text-secondary"
                 >
-                    {{ stringOrFallback(meterReadingDetail.areaCode, '-') }}
+                    {{ stringOrFallback(waterBillDetail.areaCode, '-') }}
                 </VDescription>
                 <VDescription
                     title="Deskripsi Area"
                     title-class="text-secondary"
                 >
-                    {{ stringOrFallback(meterReadingDetail.areaDescription, '-') }}
+                    {{ stringOrFallback(waterBillDetail.areaDescription, '-') }}
                 </VDescription>
                 <VDescription
                     title="Nama Member"
                     title-class="text-secondary"
                 >
-                    {{ stringOrFallback(meterReadingDetail.memberFullName, '-') }}
-                </VDescription>
-                <VDescription
-                    title="Email Member"
-                    title-class="text-secondary"
-                >
-                    {{ stringOrFallback(meterReadingDetail.memberEmail, '-') }}
-                </VDescription>
-                <VDescription
-                    title="No HP Member"
-                    title-class="text-secondary"
-                >
-                    {{ stringOrFallback(meterReadingDetail.memberMobileNumber, '-') }}
-                </VDescription>
-                <VDescription
-                    title="Tanggal Pembacaan"
-                    title-class="text-secondary"
-                >
-                    {{ formatEpochToDate(meterReadingDetail.readingDate) }}
-                </VDescription>
-                <VDescription
-                    title="Bacaan Sebelumnya"
-                    title-class="text-secondary"
-                >
-                    {{ formatCurrency(meterReadingDetail.previousReading, { maximumFractionDigits: 0 }) }}
-                </VDescription>
-                <VDescription
-                    title="Bacaan Saat Ini"
-                    title-class="text-secondary"
-                >
-                    {{ formatCurrency(meterReadingDetail.currentReading, { maximumFractionDigits: 0 }) }}
-                </VDescription>
-                <VDescription
-                    title="Konsumsi"
-                    title-class="text-secondary"
-                >
-                    {{ formatCurrency(meterReadingDetail.consumption, { maximumFractionDigits: 0 }) }}
+                    {{ stringOrFallback(waterBillDetail.memberName, '-') }}
                 </VDescription>
                 <VDescription
                     title="Tahun"
                     title-class="text-secondary"
                 >
-                    {{ meterReadingDetail.year }}
+                    {{ waterBillDetail.year }}
                 </VDescription>
                 <VDescription
                     title="Bulan"
                     title-class="text-secondary"
                 >
-                    {{ MONTH[meterReadingDetail.month - 1].label }}
+                    {{ MONTH[waterBillDetail.month - 1].label }}
                 </VDescription>
                 <VDescription
-                    title="Catatan"
+                    title="Biaya Konsumsi"
                     title-class="text-secondary"
                 >
-                    {{ stringOrFallback(meterReadingDetail.notes, '-') }}
+                    {{ formatCurrency(waterBillDetail.consumptionCharge) }}
                 </VDescription>
                 <VDescription
-                    title="Status"
+                    title="Biaya Lainnya"
                     title-class="text-secondary"
                 >
-                    <VBadge
-                        :variant="
-                            METER_READING_STATUS_VARIANTS[meterReadingDetail.status]
-                        "
-                    >
-                        {{ METER_READING_STATUS[meterReadingDetail.status] }}
-                    </VBadge>
+                    {{ formatCurrency(waterBillDetail.otherCharges) }}
+                </VDescription>
+                <VDescription
+                    title="Jumlah Total"
+                    title-class="text-secondary"
+                >
+                    {{ formatCurrency(waterBillDetail.totalAmount) }}
+                </VDescription>
+                <VDescription
+                    title="Tanggal Dibuat"
+                    title-class="text-secondary"
+                >
+                    {{ formatEpochToDate(waterBillDetail.createdDate) }}
                 </VDescription>
                 <VDescription
                     title="Tanggal Diubah"
                     title-class="text-secondary"
                 >
-                    {{ formatEpochToDate(meterReadingDetail.lastModifiedDate) }}
+                    {{ formatEpochToDate(waterBillDetail.lastModifiedDate) }}
                 </VDescription>
             </VGrid>
         </VCard>
@@ -249,25 +209,25 @@ const handleCalculate = handleCustomConfirmation({
                     title="Konsumsi"
                     title-class="text-secondary"
                 >
-                    {{ formatCurrency(meterReadingEstimateDetail.consumption) }}
+                    {{ formatCurrency(waterBillDetail.detail.consumption) }}
                 </VDescription>
                 <VDescription
                     title="Jumlah"
                     title-class="text-secondary"
                 >
-                    Rp {{ formatCurrency(meterReadingEstimateDetail.amount) }}
+                    Rp {{ formatCurrency(waterBillDetail.detail.amount) }}
                 </VDescription>
                 <VDescription
                     title="Biaya Beban"
                     title-class="text-secondary"
                 >
-                    Rp {{ formatCurrency(meterReadingEstimateDetail.adminFee) }}
+                    Rp {{ formatCurrency(waterBillDetail.detail.adminFee) }}
                 </VDescription>
                 <VDescription
                     title="Total"
                     title-class="text-secondary"
                 >
-                    Rp {{ formatCurrency(meterReadingEstimateDetail.amount + meterReadingEstimateDetail.adminFee) }}
+                    Rp {{ formatCurrency(waterBillDetail.detail.amount + waterBillDetail.detail.adminFee) }}
                 </VDescription>
             </VGrid>
             <VText
@@ -279,7 +239,7 @@ const handleCalculate = handleCustomConfirmation({
 
             <VTable
                 :columns="columns"
-                :entries="meterReadingEstimateDetail.rates"
+                :entries="waterBillDetail.detail.rates"
                 :cardable="false"
                 :hide-header="true"
                 :hide-footer="true"

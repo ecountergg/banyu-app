@@ -132,6 +132,7 @@ const onSubmit = handleSubmit(async () => {
                     size="lg"
                     required
                     clearable
+                    :searchable="false"
                     :disabled="action === 'update'"
                 />
                 <VMultiSelect

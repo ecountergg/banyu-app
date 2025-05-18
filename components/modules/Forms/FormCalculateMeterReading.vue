@@ -66,6 +66,7 @@ const onSubmit = handleSubmit(async () => {
                 size="lg"
                 required
                 clearable
+                :searchable="false"
                 :loading="isLoadingAreaList"
             />
             <VSelect
@@ -77,8 +78,9 @@ const onSubmit = handleSubmit(async () => {
                 value-key="value"
                 label-key="label"
                 size="lg"
-                clearable
                 required
+                clearable
+                :searchable="false"
             />
             <VSelect
                 v-model:model-value="state.month"
@@ -91,6 +93,7 @@ const onSubmit = handleSubmit(async () => {
                 size="lg"
                 clearable
                 required
+                :searchable="false"
             />
         </VFlex>
         <VFlex

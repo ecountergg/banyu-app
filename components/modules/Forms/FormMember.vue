@@ -98,6 +98,7 @@ const onSubmit = handleSubmit(async () => {
                     size="lg"
                     required
                     clearable
+                    :searchable="false"
                     :loading="isLoadingAreaList"
                     :disabled="action === 'update'"
                 />

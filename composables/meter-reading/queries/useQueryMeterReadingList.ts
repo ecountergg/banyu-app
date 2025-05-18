@@ -10,10 +10,10 @@ export const useQueryMeterReadingList = (
     searchCount: MaybeRef<number>,
     options?: UseQueryOptions<GenericPagination<MeterReadingListResponse[]>>,
 ) => {
-    const MeterReadingService = new MeterReadingServiceImpl();
+    const meterReadingService = new MeterReadingServiceImpl();
     const query = useQuery<GenericPagination<MeterReadingListResponse[]>>({
         queryKey: ['meter-reading-list', params, searchCount],
-        queryFn: () => MeterReadingService.getMeterReadingList(params),
+        queryFn: () => meterReadingService.getMeterReadingList(params),
         ...options,
     });
     const total = computed(() => Number(query.data.value?.elements ?? 0));
