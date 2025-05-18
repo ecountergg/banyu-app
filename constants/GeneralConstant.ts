@@ -125,6 +125,13 @@ export const DASHBOARD_MENUS: DashboardMenu[] = [
                 icon: 'lucide:ruler',
                 userType: [USER_TYPE.SUPER_ADMIN],
             },
+            {
+                name: 'Tagihan Air',
+                hrefName: 'water-bill',
+                path: '/water-bill',
+                icon: 'lucide:calculator',
+                userType: [USER_TYPE.SUPER_ADMIN],
+            },
         ],
     },
     {

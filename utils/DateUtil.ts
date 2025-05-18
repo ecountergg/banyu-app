@@ -1,5 +1,6 @@
 import type { SelectOption } from '~/types';
 import dayjs from '#build/dayjs.imports.mjs';
+import 'dayjs/locale/id';
 
 /**
  * Format a date to a readable string.
@@ -48,7 +49,7 @@ export const formatEpochToDateTime = (date: number | Date): string => {
 
 export const formatEpochToDate = (date: number | Date): string => {
     const epochMs = typeof date === 'number' && date < 1e12 ? date * 1000 : date;
-    return dayjs(epochMs).local().format('DD MMM YYYY');
+    return dayjs(epochMs).locale('id').local().format('DD MMM YYYY');
 };
 
 export const convertEpochToDate = (epoch: number): Date => {
