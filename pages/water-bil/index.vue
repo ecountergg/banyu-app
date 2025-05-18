@@ -5,6 +5,7 @@ import { TableColumnBuilder } from '~/builders/TableColumnBuilder';
 import VAccordion from '~/components/base/VAccordion/VAccordion.vue';
 import VLink from '~/components/base/VLink/VLink.vue';
 import VText from '~/components/base/VText/VText.vue';
+import FilterWaterBill from '~/components/modules/Filters/FilterWaterBill.vue';
 import { useQueryWaterBillList } from '~/composables/water-bill/queries/useQueryWaterBillList';
 import { WaterBillPaginationSearchParams } from '~/models/params/WaterBillPaginationSearchParams';
 

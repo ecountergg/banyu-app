@@ -103,6 +103,7 @@ const onSubmit = handleSubmit(async () => {
                     label-key="fullName"
                     size="lg"
                     clearable
+                    :searchable="false"
                     :loading="isLoadingMemberist"
                 />
                 <VInputDate

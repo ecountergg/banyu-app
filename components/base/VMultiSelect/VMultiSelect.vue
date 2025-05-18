@@ -35,7 +35,8 @@ const {
     inputCols = 8,
     labelCols = 4,
     inlineCols = 12,
-    searchable = true,
+    // TODO: Fix searchable
+    searchable = false,
     asAsync = false,
     valueKey = 'value',
     labelKey = 'label',

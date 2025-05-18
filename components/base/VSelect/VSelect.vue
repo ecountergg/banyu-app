@@ -35,7 +35,8 @@ const {
     inputCols = 8,
     labelCols = 4,
     inlineCols = 12,
-    searchable = true,
+    // TODO: Fix searchable
+    searchable = false,
     asAsync = false,
     valueKey = 'value',
     labelKey = 'label',
@@ -141,22 +142,21 @@ watch(state, value => setSelectValue(value));
                             )"
                             :disabled="disabled"
                         >
-                            <span
-                                v-if="selectedValue"
-                                class="flex-1"
-                            >
-                                {{ selectedValue }}
+                            <span class="flex-1 truncate">
+                                {{ selectedValue || placeholder }}
                             </span>
-                            <span
-                                v-else
-                                :class="cn('flex-1 text-muted-300', {
-                                    'opacity-70 dark:opacity-60': disabled,
-                                    'text-red-400 dark:text-red-300': !!errorMessage,
-                                })"
-                            >
-                                {{ placeholder }}
-                            </span>
+
                             <Icon
+                                v-if="clearable && state !== undefined && !disabled"
+                                name="lucide:x"
+                                class="ml-2 h-4 w-4 shrink-0 cursor-pointer opacity-60 hover:opacity-100"
+                                @click.stop="() => {
+                                    state = undefined;
+                                    emits('change', undefined);
+                                }"
+                            />
+                            <Icon
+                                v-else
                                 name="lucide:chevron-down"
                                 class="ml-2 h-4 w-4 shrink-0 opacity-50"
                             />

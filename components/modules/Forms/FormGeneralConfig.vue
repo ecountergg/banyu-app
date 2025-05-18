@@ -94,6 +94,7 @@ const onSubmit = handleSubmit(async () => {
                     required
                     :disabled="action === 'update'"
                 />
+
                 <VSelect
                     v-model="state.dataType"
                     name="dataType"
@@ -105,6 +106,7 @@ const onSubmit = handleSubmit(async () => {
                     required
                     size="lg"
                     clearable
+                    :searchable="false"
                 />
                 <VInput
                     v-model="state.value"
