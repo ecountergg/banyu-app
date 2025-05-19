@@ -9,7 +9,7 @@ import { useMutationMeterReadingUpdate } from '~/composables/meter-reading/mutat
 import { MeterReadingDto } from '~/models/dtos/MeterReadingDto';
 import { MemberPaginationSearchParams } from '~/models/params/MemberPaginationSearchParams';
 
-const { data, action } = defineProps<{
+const { data } = defineProps<{
     data?: MeterReadingDetailResponse;
     action?: 'create' | 'update';
 }>();
@@ -127,16 +127,6 @@ const onSubmit = handleSubmit(async () => {
                     placeholder="Masukan Catatan"
                     name="notes"
                     label="Catatan"
-                />
-                <VInput
-                    v-if="action === 'update'"
-                    v-model="state.version"
-                    placeholder="Masukan Versi"
-                    name="version"
-                    label="Versi"
-                    :min="data?.version"
-                    type="number"
-                    required
                 />
             </VFlex>
             <VFlex
