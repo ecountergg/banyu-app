@@ -1,4 +1,4 @@
-import type { DashboardMenu, ErrorType, GeneralConfigDataType, SelectOption, Status, StatusVariants, UserType, WaterReadingStatus } from '~/types';
+import type { DashboardMenu, ErrorType, GeneralConfigDataType, PaidStatus, SelectOption, Status, StatusVariants, UserType, WaterReadingStatus } from '~/types';
 
 export const MONTH: SelectOption<number, string>[] = [
     {
@@ -126,10 +126,17 @@ export const DASHBOARD_MENUS: DashboardMenu[] = [
                 userType: [USER_TYPE.SUPER_ADMIN],
             },
             {
-                name: 'Tagihan Air',
+                name: 'Tagihan',
                 hrefName: 'water-bill',
                 path: '/water-bill',
                 icon: 'lucide:calculator',
+                userType: [USER_TYPE.SUPER_ADMIN],
+            },
+            {
+                name: 'Tagihan Dibayar',
+                hrefName: 'water-bill-paid',
+                path: '/water-bill-paid',
+                icon: 'lucide:wallet',
                 userType: [USER_TYPE.SUPER_ADMIN],
             },
         ],
@@ -200,4 +207,14 @@ export const GENERAL_CONFIG_DATA_TYPE_VARIANTS: Record<GeneralConfigDataType, St
     PATH: 'secondary',
     TEXT: 'warning',
     URL: 'emerald',
+} as const;
+
+export const PAID_STATUS = {
+    UNPAID: 'UNPAID',
+    PAID: 'PAID',
+} as const;
+
+export const PAID_STATUS_VARIANTS: Record<PaidStatus, StatusVariants> = {
+    UNPAID: 'danger',
+    PAID: 'success',
 } as const;

@@ -1,22 +1,24 @@
 <script setup lang="ts">
-import type { WaterBillListResponse } from '~/models/WaterBill';
+import type { WaterBillPaidListResponse } from '~/models/WaterBillPaid';
 import { BreadcrumbBuilder } from '~/builders/BreadcrumbBuilder';
 import { TableColumnBuilder } from '~/builders/TableColumnBuilder';
 import VAccordion from '~/components/base/VAccordion/VAccordion.vue';
+import VBadge from '~/components/base/VBadge/VBadge.vue';
 import VLink from '~/components/base/VLink/VLink.vue';
 import VText from '~/components/base/VText/VText.vue';
-import FilterWaterBill from '~/components/modules/Filters/FilterWaterBill.vue';
-import { useQueryWaterBillList } from '~/composables/water-bill/queries/useQueryWaterBillList';
-import { WaterBillPaginationSearchParams } from '~/models/params/WaterBillPaginationSearchParams';
+import FilterWaterBillPaid from '~/components/modules/Filters/FilterWaterBillPaid.vue';
+import { useQueryWaterBillPaidList } from '~/composables/water-bill-paid/queries/useQueryWaterBillPaidList';
+import { PAID_STATUS, PAID_STATUS_VARIANTS } from '~/constants';
+import { WaterBillPaidPaginationSearchParams } from '~/models/params/WaterBillPaidPaginationSearchParams';
 
 definePageMeta({
     layout: false,
     middleware: ['auth', 'super-admin'],
-    name: 'water-bill',
+    name: 'water-bill-paid',
 });
 
 useSeoMeta({
-    title: 'Tagihan',
+    title: 'Tagihan Dibayar',
 });
 
 const pageStore = usePageStore();
@@ -25,20 +27,20 @@ pageStore.setTitle('');
 pageStore.setBreadcrumbList(
     new BreadcrumbBuilder()
         .setBreadcrumb({
-            name: 'Tagihan',
+            name: 'Tagihan Dibayar',
         })
         .build(),
 );
 
-const params = reactive(new WaterBillPaginationSearchParams());
+const params = reactive(new WaterBillPaidPaginationSearchParams());
 const search = reactive({
     count: 0,
 });
 
-const { results, total, isLoading } = useQueryWaterBillList(params, search.count);
+const { results, total, isLoading } = useQueryWaterBillPaidList(params, search.count);
 
 const columns = computed(() =>
-    new TableColumnBuilder<WaterBillListResponse>()
+    new TableColumnBuilder<WaterBillPaidListResponse>()
         .setColumn({
             key: 'billNumber',
             sortKey: 'billNumber',
@@ -46,7 +48,7 @@ const columns = computed(() =>
             render: row => h(VLink, {
                 variant: 'unstyled',
                 class: 'text-primary-500 hover:underline font-bold underline-offset-4 decoration-transparent hover:decoration-gold-500 transition-colors duration-300',
-                to: { name: 'water-bill-detail', params: { id: row.id } },
+                to: { name: 'water-bill-paid-detail', params: { id: row.id } },
             }, () => truncateString(row.billNumber, 20)),
         })
         .setColumn({
@@ -66,6 +68,15 @@ const columns = computed(() =>
                 as: 'p',
                 variant: 'base',
             }, () => formatEpochToDate(row.dueDate)),
+        })
+        .setColumn({
+            key: 'paidDate',
+            sortKey: 'paidDate',
+            name: 'Tanggal Dibayar',
+            render: row => h(VText, {
+                as: 'p',
+                variant: 'base',
+            }, () => formatEpochToDate(row.paidDate)),
         })
         .setColumn({
             key: 'areaCode',
@@ -93,6 +104,15 @@ const columns = computed(() =>
                 as: 'p',
                 variant: 'base',
             }, () => stringOrFallback(row.memberName)),
+        })
+        .setColumn({
+            key: 'status',
+            sortKey: 'status',
+            name: 'Status',
+            render: row => h(VBadge, {
+                variant: PAID_STATUS_VARIANTS[row.status],
+                class: 'w-max',
+            }, () => PAID_STATUS[row.status]),
         })
         .setColumn({
             key: 'createdDate',
@@ -126,7 +146,7 @@ const columns = computed(() =>
                     </p>
                 </template>
                 <template #default>
-                    <FilterWaterBill
+                    <FilterWaterBillPaid
                         :params="params"
                     />
                 </template>
@@ -138,7 +158,7 @@ const columns = computed(() =>
             v-model:sort-direction="params.direction"
             v-model:page="params.page"
             v-model:per-page="params.size"
-            title="Tagihan"
+            title="Tagihan Dibayar"
             :entries="results"
             with-number
             :columns="columns"

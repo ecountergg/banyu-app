@@ -1,5 +1,5 @@
 import type { App } from 'vue';
-import type { GENERAL_CONFIG_DATA_TYPE, METER_READING_STATUS, STATUS, USER_TYPE } from '~/constants';
+import type { GENERAL_CONFIG_DATA_TYPE, METER_READING_STATUS, PAID_STATUS, STATUS, USER_TYPE } from '~/constants';
 
 export type SetupModule = (app: App<Element>) => void;
 export type ObjectValues<Type> = Type[keyof Type];
@@ -72,3 +72,4 @@ export type Status = typeof STATUS[keyof typeof STATUS];
 export type UserType = typeof USER_TYPE[keyof typeof USER_TYPE];
 export type WaterReadingStatus = typeof METER_READING_STATUS[keyof typeof METER_READING_STATUS];
 export type GeneralConfigDataType = typeof GENERAL_CONFIG_DATA_TYPE[keyof typeof GENERAL_CONFIG_DATA_TYPE];
+export type PaidStatus = typeof PAID_STATUS[keyof typeof PAID_STATUS];
