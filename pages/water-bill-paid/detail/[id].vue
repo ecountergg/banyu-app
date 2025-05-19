@@ -3,20 +3,18 @@ import type { MeterReadingEstimateRate } from '~/models/MeterReading';
 import { BreadcrumbBuilder } from '~/builders/BreadcrumbBuilder';
 import { TableColumnBuilder } from '~/builders/TableColumnBuilder';
 import VText from '~/components/base/VText/VText.vue';
-import { useMutationWaterBillInitPayment } from '~/composables/water-bill/mutations/useMutationWaterBillInitPayment';
-import { useMutationGetWaterBillDetail } from '~/composables/water-bill/queries/useQueryWaterBillDetail';
-import { useMutationGetWaterBillDownload } from '~/composables/water-bill/queries/useQueryWaterBillDownload';
-import { MONTH } from '~/constants';
-import { WaterBillDto } from '~/models/dtos/WaterBillDto';
+import { useMutationGetWaterBillPaidDetail } from '~/composables/water-bill-paid/queries/useQueryWaterBillPaidDetail';
+import { useMutationGetWaterBillPaidDownload } from '~/composables/water-bill-paid/queries/useQueryWaterBillPaidDownload';
+import { MONTH, PAID_STATUS_VARIANTS } from '~/constants';
 
 definePageMeta({
     layout: false,
     middleware: ['auth', 'super-admin'],
-    name: 'water-bill-detail',
+    name: 'water-bill-paid-detail',
 });
 
 useSeoMeta({
-    title: 'Detil Tagihan',
+    title: 'Detil Tagihan Dibayar',
 });
 
 const route = useRoute();
@@ -24,11 +22,11 @@ const pageStore = usePageStore();
 pageStore.setBreadcrumbList(
     new BreadcrumbBuilder()
         .setBreadcrumb({
-            name: 'Tagihan',
-            to: { name: 'water-bill' },
+            name: 'Tagihan Dibayar',
+            to: { name: 'water-bill-paid' },
         })
         .setBreadcrumb({
-            name: 'Tagihan Detil',
+            name: 'Tagihan Dibayar Detil',
         })
         .build(),
 );
@@ -37,38 +35,21 @@ const id = computed(() => route.params.id.toString());
 pageStore.setTitle('');
 
 const { showNotification } = useNotification();
-const { handleCustomConfirmationReason } = useDialog();
-const { mutate: mutateInitPayment } = useMutationWaterBillInitPayment(id.value);
 const queryClient = useQueryClient();
-const { mutateAsync: getWaterBillDetail } = useMutationGetWaterBillDetail();
-const waterBillDetail = await getWaterBillDetail({ id: id.value });
-queryClient.setQueryData(['water-bill-detail'], waterBillDetail);
-const { mutateAsync: downloadWaterBill } = useMutationGetWaterBillDownload({
+const { mutateAsync: getWaterBillPaidDetail } = useMutationGetWaterBillPaidDetail();
+const waterBillPaidDetail = await getWaterBillPaidDetail({ id: id.value });
+queryClient.setQueryData(['water-bill-detail'], waterBillPaidDetail);
+const { mutateAsync: downloadWaterBillPaid } = useMutationGetWaterBillPaidDownload({
     onSuccess: (data) => {
         showNotification({
             type: 'success',
             title: 'Sukses Diunduh',
-            message: `Tagihan berhasil diunduh - ${waterBillDetail.billNumber}`,
+            message: `Tagihan dibayar berhasil diunduh - ${waterBillPaidDetail.billNumber}`,
         });
 
-        downloadFilePdf(data, `Tagihan berhasil diunduh - ${waterBillDetail.billNumber} - ${formatEpochToDateTime(new Date())}`);
+        downloadFilePdf(data, `Tagihan berhasil diunduh - ${waterBillPaidDetail.billNumber} - ${formatEpochToDateTime(new Date())}`);
     },
 });
-const handleInitPayment = async () => {
-    const response = await handleCustomConfirmationReason({
-        title: 'Bayar Tagihan',
-        message: 'Apakah Anda yakin ingin membayar tagihan ini?',
-        classHeadingIcon: 'bg-primary-100 text-primary-600 dark:text-primary-600',
-        confirmVariant: 'primary',
-        confirmText: 'Ya, Bayar',
-        icon: 'lucide:calculator',
-        reason: true,
-    });
-
-    mutateInitPayment(
-        new WaterBillDto().setNotes(response),
-    );
-};
 
 const columns = computed(() =>
     new TableColumnBuilder<MeterReadingEstimateRate>()
@@ -111,22 +92,15 @@ const columns = computed(() =>
                 gap="4"
             >
                 <VButton
-                    variant="primary"
-                    @click="handleInitPayment()"
-                >
-                    Bayar Tagihan
-                    <Icon name="lucide:calculator" />
-                </VButton>
-                <VButton
                     variant="info"
-                    @click="downloadWaterBill({ id })"
+                    @click="downloadWaterBillPaid({ id })"
                 >
                     Unduh Invoice
                     <Icon name="lucide:download" />
                 </VButton>
             </VFlex>
         </template>
-        <VCard title="Tagihan Detil">
+        <VCard title="Tagihan Dibayar Detil">
             <VGrid
                 type="cols"
                 md="3"
@@ -138,85 +112,102 @@ const columns = computed(() =>
                     title="No Tagihan"
                     title-class="text-secondary"
                 >
-                    {{ stringOrFallback(waterBillDetail.billNumber, '-') }}
+                    {{ stringOrFallback(waterBillPaidDetail.billNumber, '-') }}
                 </VDescription>
                 <VDescription
                     title="Tanggal Tagihan"
                     title-class="text-secondary"
                 >
-                    {{ formatEpochToDate(waterBillDetail.billDate) }}
+                    {{ formatEpochToDate(waterBillPaidDetail.billDate) }}
                 </VDescription>
                 <VDescription
                     title="Jatuh Tempo"
                     title-class="text-secondary"
                 >
-                    {{ formatEpochToDate(waterBillDetail.dueDate) }}
+                    {{ formatEpochToDate(waterBillPaidDetail.dueDate) }}
+                </VDescription>
+                <VDescription
+                    title="Tanggal Dibayar"
+                    title-class="text-secondary"
+                >
+                    {{ formatEpochToDate(waterBillPaidDetail.paidDate) }}
                 </VDescription>
                 <VDescription
                     title="No Meter"
                     title-class="text-secondary"
                 >
-                    {{ stringOrFallback(waterBillDetail.meterNumber, '-') }}
+                    {{ stringOrFallback(waterBillPaidDetail.meterNumber, '-') }}
                 </VDescription>
                 <VDescription
                     title="Kode Area"
                     title-class="text-secondary"
                 >
-                    {{ stringOrFallback(waterBillDetail.areaCode, '-') }}
+                    {{ stringOrFallback(waterBillPaidDetail.areaCode, '-') }}
                 </VDescription>
                 <VDescription
                     title="Deskripsi Area"
                     title-class="text-secondary"
                 >
-                    {{ stringOrFallback(waterBillDetail.areaDescription, '-') }}
+                    {{ stringOrFallback(waterBillPaidDetail.areaDescription, '-') }}
                 </VDescription>
                 <VDescription
                     title="Nama Member"
                     title-class="text-secondary"
                 >
-                    {{ stringOrFallback(waterBillDetail.memberName, '-') }}
+                    {{ stringOrFallback(waterBillPaidDetail.memberName, '-') }}
+                </VDescription>
+                <VDescription
+                    title="Status"
+                    title-class="text-secondary"
+                >
+                    <VBadge
+                        :variant="PAID_STATUS_VARIANTS[waterBillPaidDetail.status]"
+                        class="w-max"
+                    >
+                        {{ waterBillPaidDetail.status }}
+                    </VBadge>
                 </VDescription>
                 <VDescription
                     title="Tahun"
                     title-class="text-secondary"
                 >
-                    {{ waterBillDetail.year }}
+                    {{ waterBillPaidDetail.year }}
                 </VDescription>
                 <VDescription
                     title="Bulan"
                     title-class="text-secondary"
                 >
-                    {{ MONTH[waterBillDetail.month - 1].label }}
+                    {{ MONTH[waterBillPaidDetail.month - 1].label }}
                 </VDescription>
                 <VDescription
                     title="Biaya Konsumsi"
                     title-class="text-secondary"
                 >
-                    {{ formatCurrency(waterBillDetail.consumptionCharge) }}
+                    {{ formatCurrency(waterBillPaidDetail.consumptionCharge) }}
                 </VDescription>
                 <VDescription
                     title="Biaya Lainnya"
                     title-class="text-secondary"
                 >
-                    {{ formatCurrency(waterBillDetail.otherCharges) }}
+                    {{ formatCurrency(waterBillPaidDetail.otherCharges) }}
                 </VDescription>
                 <VDescription
                     title="Jumlah Total"
                     title-class="text-secondary"
                 >
-                    {{ formatCurrency(waterBillDetail.totalAmount) }}
+                    {{ formatCurrency(waterBillPaidDetail.totalAmount) }}
                 </VDescription>
                 <VDescription
                     title="Tanggal Dibuat"
                     title-class="text-secondary"
                 >
-                    {{ formatEpochToDate(waterBillDetail.createdDate) }}
+                    {{ formatEpochToDate(waterBillPaidDetail.createdDate) }}
                 </VDescription>
                 <VDescription
                     title="Tanggal Diubah"
                     title-class="text-secondary"
                 >
-                    {{ formatEpochToDate(waterBillDetail.lastModifiedDate) }}
+                    {{ formatEpochToDate(waterBillPaidDetail.lastModifiedDate) }}
                 </VDescription>
             </VGrid>
         </VCard>
@@ -235,25 +226,25 @@ const columns = computed(() =>
                     title="Konsumsi"
                     title-class="text-secondary"
                 >
-                    {{ formatCurrency(waterBillDetail.detail.consumption) }}
+                    {{ formatCurrency(waterBillPaidDetail.detail.consumption) }}
                 </VDescription>
                 <VDescription
                     title="Jumlah"
                     title-class="text-secondary"
                 >
-                    Rp {{ formatCurrency(waterBillDetail.detail.amount) }}
+                    Rp {{ formatCurrency(waterBillPaidDetail.detail.amount) }}
                 </VDescription>
                 <VDescription
                     title="Biaya Beban"
                     title-class="text-secondary"
                 >
-                    Rp {{ formatCurrency(waterBillDetail.detail.adminFee) }}
+                    Rp {{ formatCurrency(waterBillPaidDetail.detail.adminFee) }}
                 </VDescription>
                 <VDescription
                     title="Total"
                     title-class="text-secondary"
                 >
-                    Rp {{ formatCurrency(waterBillDetail.detail.amount + waterBillDetail.detail.adminFee) }}
+                    Rp {{ formatCurrency(waterBillPaidDetail.detail.amount + waterBillPaidDetail.detail.adminFee) }}
                 </VDescription>
             </VGrid>
             <VText
@@ -265,7 +256,7 @@ const columns = computed(() =>
 
             <VTable
                 :columns="columns"
-                :entries="waterBillDetail.detail.rates"
+                :entries="waterBillPaidDetail.detail.rates"
                 :cardable="false"
                 :hide-header="true"
                 :hide-footer="true"
