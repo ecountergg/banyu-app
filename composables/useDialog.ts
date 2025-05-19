@@ -31,9 +31,14 @@ export function useDialog() {
         });
     };
 
+    const handleCustomConfirmationReason = async (props: ConfirmationProps) => {
+        return await createPromiseDialog<ConfirmationProps, string>(ModalConfirmation)(props);
+    };
+
     return {
         handleArchiveConfirmation,
         handleCustomConfirmation,
         handlePublishConfirmation,
+        handleCustomConfirmationReason,
     };
 }

@@ -1,3 +1,4 @@
+import type { WaterBillDto } from '~/models/dtos/WaterBillDto';
 import type { WaterBillPaginationSearchParams } from '~/models/params/WaterBillPaginationSearchParams';
 import type { WaterBillDetailResponse, WaterBillListResponse } from '~/models/WaterBill';
 import type { WaterBillService } from '~/services/WaterBillService';
@@ -26,5 +27,14 @@ export class WaterBillServiceImpl implements WaterBillService {
 
     async getWaterBillDownload(code: string): Promise<File> {
         return await useNuxtApp().$api<File>(WaterBillEndpoint.DOWNLOAD.replace('[id]', code));
+    }
+
+    async initPaymentWaterBill(code: string, data: WaterBillDto): Promise<WaterBillDetailResponse> {
+        return await useNuxtApp().$api<WaterBillDetailResponse>(WaterBillEndpoint.INIT_PAYMENT.replace('[id]', code), {
+            method: 'PUT',
+            body: {
+                ...data,
+            },
+        });
     }
 }

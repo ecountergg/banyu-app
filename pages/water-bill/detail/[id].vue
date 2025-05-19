@@ -3,9 +3,11 @@ import type { MeterReadingEstimateRate } from '~/models/MeterReading';
 import { BreadcrumbBuilder } from '~/builders/BreadcrumbBuilder';
 import { TableColumnBuilder } from '~/builders/TableColumnBuilder';
 import VText from '~/components/base/VText/VText.vue';
+import { useMutationWaterBillInitPayment } from '~/composables/water-bill/mutations/useMutationWaterBillInitPayment';
 import { useMutationGetWaterBillDetail } from '~/composables/water-bill/queries/useQueryWaterBillDetail';
 import { useMutationGetWaterBillDownload } from '~/composables/water-bill/queries/useQueryWaterBillDownload';
 import { MONTH } from '~/constants';
+import { WaterBillDto } from '~/models/dtos/WaterBillDto';
 
 definePageMeta({
     layout: false,
@@ -35,6 +37,8 @@ const id = computed(() => route.params.id.toString());
 pageStore.setTitle('');
 
 const { showNotification } = useNotification();
+const { handleCustomConfirmationReason } = useDialog();
+const { mutate: mutateInitPayment } = useMutationWaterBillInitPayment(id.value);
 const queryClient = useQueryClient();
 const { mutateAsync: getWaterBillDetail } = useMutationGetWaterBillDetail();
 const waterBillDetail = await getWaterBillDetail({ id: id.value });
@@ -50,6 +54,21 @@ const { mutateAsync: downloadWaterBill } = useMutationGetWaterBillDownload({
         downloadFilePdf(data, `Tagihan air berhasil diunduh - ${waterBillDetail.billNumber} - ${formatEpochToDateTime(new Date())}`);
     },
 });
+const handleInitPayment = async () => {
+    const response = await handleCustomConfirmationReason({
+        title: 'Bayar Tagihan',
+        message: 'Apakah Anda yakin ingin membayar tagihan ini?',
+        classHeadingIcon: 'bg-primary-100 text-primary-600 dark:text-primary-600',
+        confirmVariant: 'primary',
+        confirmText: 'Ya, Bayar',
+        icon: 'lucide:calculator',
+        reason: true,
+    });
+
+    mutateInitPayment(
+        new WaterBillDto().setNotes(response),
+    );
+};
 
 const columns = computed(() =>
     new TableColumnBuilder<MeterReadingEstimateRate>()
@@ -91,6 +110,13 @@ const columns = computed(() =>
                 direction="row"
                 gap="4"
             >
+                <VButton
+                    variant="primary"
+                    @click="handleInitPayment()"
+                >
+                    Bayar Tagihan
+                    <Icon name="lucide:calculator" />
+                </VButton>
                 <VButton
                     variant="info"
                     @click="downloadWaterBill({ id })"
