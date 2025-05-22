@@ -13,8 +13,8 @@ import { WaterBillPaidPaginationSearchParams } from '~/models/params/WaterBillPa
 
 definePageMeta({
     layout: false,
-    middleware: ['auth', 'super-admin'],
-    name: 'water-bill-paid',
+    middleware: ['auth', 'combined-auth'],
+    name: 'bill-paid',
 });
 
 useSeoMeta({
@@ -48,7 +48,7 @@ const columns = computed(() =>
             render: row => h(VLink, {
                 variant: 'unstyled',
                 class: 'text-primary-500 hover:underline font-bold underline-offset-4 decoration-transparent hover:decoration-gold-500 transition-colors duration-300',
-                to: { name: 'water-bill-paid-detail', params: { id: row.id } },
+                to: { name: 'bill-paid-detail', params: { id: row.id } },
             }, () => truncateString(row.billNumber, 20)),
         })
         .setColumn({

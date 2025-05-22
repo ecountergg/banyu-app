@@ -10,7 +10,7 @@ import { MemberPaginationSearchParams } from '~/models/params/MemberPaginationSe
 
 definePageMeta({
     layout: false,
-    middleware: ['auth', 'super-admin'],
+    middleware: ['auth', 'combined-auth'],
     name: 'member',
 });
 

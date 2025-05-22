@@ -7,7 +7,7 @@ import { STATUS, STATUS_VARIANTS } from '../../../constants/GeneralConstant';
 
 definePageMeta({
     layout: false,
-    middleware: ['auth', 'super-admin'],
+    middleware: ['auth', 'combined-auth'],
     name: 'member-detail',
 });
 

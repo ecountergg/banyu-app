@@ -12,7 +12,7 @@ import { MeterReadingDto } from '~/models/dtos/MeterReadingDto';
 
 definePageMeta({
     layout: false,
-    middleware: ['auth', 'super-admin'],
+    middleware: ['auth', 'combined-auth'],
     name: 'meter-reading-detail',
 });
 

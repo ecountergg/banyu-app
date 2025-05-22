@@ -3,7 +3,7 @@ import { BreadcrumbBuilder } from '~/builders/BreadcrumbBuilder';
 import { useMutationGetMeterReadingDetail } from '~/composables/meter-reading/queries/useQueryMeterReadingDetail';
 
 definePageMeta({
-    middleware: ['auth', 'super-admin'],
+    middleware: ['auth', 'combined-auth'],
     name: 'meter-reading-edit',
 });
 
