@@ -1,3 +1,4 @@
+// combined-auth-middleware.ts
 import { navigateTo } from '#app';
 import { toast } from 'vue-sonner';
 import { useMutationGetMeDetail } from '~/composables/me/queries/useQueryMeDetail';
@@ -19,7 +20,7 @@ export default defineNuxtRouteMiddleware(async () => {
         }
     }
 
-    if (authStore.user?.userType === USER_TYPE.ADMIN)
+    if (authStore.user?.userType === USER_TYPE.SUPER_ADMIN || authStore.user?.userType === USER_TYPE.ADMIN)
         return;
 
     return navigateTo({ name: 'index' });

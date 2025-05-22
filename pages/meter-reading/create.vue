@@ -6,7 +6,7 @@ useSeoMeta({
 });
 
 definePageMeta({
-    middleware: ['auth', 'super-admin'],
+    middleware: ['auth', 'combined-auth'],
     name: 'meter-reading-create',
 });
 

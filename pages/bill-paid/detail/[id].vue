@@ -9,8 +9,8 @@ import { MONTH, PAID_STATUS_VARIANTS } from '~/constants';
 
 definePageMeta({
     layout: false,
-    middleware: ['auth', 'super-admin'],
-    name: 'water-bill-paid-detail',
+    middleware: ['auth', 'combined-auth'],
+    name: 'bill-paid-detail',
 });
 
 useSeoMeta({
@@ -23,7 +23,7 @@ pageStore.setBreadcrumbList(
     new BreadcrumbBuilder()
         .setBreadcrumb({
             name: 'Tagihan Dibayar',
-            to: { name: 'water-bill-paid' },
+            to: { name: 'bill-paid' },
         })
         .setBreadcrumb({
             name: 'Tagihan Dibayar Detil',

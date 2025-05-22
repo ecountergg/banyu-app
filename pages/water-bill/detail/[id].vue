@@ -11,7 +11,7 @@ import { WaterBillDto } from '~/models/dtos/WaterBillDto';
 
 definePageMeta({
     layout: false,
-    middleware: ['auth', 'super-admin'],
+    middleware: ['auth', 'combined-auth'],
     name: 'water-bill-detail',
 });
 

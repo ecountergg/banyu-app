@@ -1,6 +1,7 @@
 import { navigateTo } from '#app';
 import { toast } from 'vue-sonner';
 import { useMutationGetMeDetail } from '~/composables/me/queries/useQueryMeDetail';
+import { USER_TYPE } from '~/constants';
 
 export default defineNuxtRouteMiddleware(async () => {
     const authStore = useAuthStore();
@@ -18,7 +19,7 @@ export default defineNuxtRouteMiddleware(async () => {
         }
     }
 
-    if (authStore.user?.userType === 'SUPER_ADMIN')
+    if (authStore.user?.userType === USER_TYPE.SUPER_ADMIN)
         return;
 
     return navigateTo({ name: 'index' });

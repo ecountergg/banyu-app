@@ -3,7 +3,7 @@ import { BreadcrumbBuilder } from '~/builders/BreadcrumbBuilder';
 import { useMutationGetMemberDetail } from '~/composables/member/queries/useQueryMemberDetail';
 
 definePageMeta({
-    middleware: ['auth', 'super-admin'],
+    middleware: ['auth', 'combined-auth'],
     name: 'member-edit',
 });
 

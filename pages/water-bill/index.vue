@@ -11,7 +11,7 @@ import { WaterBillPaginationSearchParams } from '~/models/params/WaterBillPagina
 
 definePageMeta({
     layout: false,
-    middleware: ['auth', 'super-admin'],
+    middleware: ['auth', 'combined-auth'],
     name: 'water-bill',
 });
 

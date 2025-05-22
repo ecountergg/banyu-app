@@ -12,7 +12,7 @@ import { METER_READING_STATUS, METER_READING_STATUS_VARIANTS, MONTH } from '../.
 
 definePageMeta({
     layout: false,
-    middleware: ['auth', 'super-admin'],
+    middleware: ['auth', 'combined-auth'],
     name: 'meter-reading',
 });
 
