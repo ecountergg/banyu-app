@@ -30,7 +30,7 @@ export class WaterBillServiceImpl implements WaterBillService {
     }
 
     async initPaymentWaterBill(code: string, data: WaterBillDto): Promise<WaterBillDetailResponse> {
-        return await useNuxtApp().$api<WaterBillDetailResponse>(WaterBillEndpoint.INIT_PAYMENT.replace('[id]', code), {
+        return await useNuxtApp().$api<WaterBillDetailResponse>(WaterBillEndpoint.INIT_PAYMENT.replace('[billNumber]', code), {
             method: 'PUT',
             body: {
                 ...data,

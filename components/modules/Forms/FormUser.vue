@@ -25,22 +25,22 @@ const state = reactive({
 
 const { showNotification } = useNotification();
 const { mutate: createUser, isPending: isPendingCreateUser } = useMutationUserCreate({
-    onSuccess: (data) => {
+    onSuccess: () => {
         showNotification({
             type: 'success',
             title: 'Sukses Dibuat',
-            message: `Pengguna berhasil dibuat - ${data.username}`,
+            message: `Pengguna berhasil dibuat`,
         });
         navigateTo({ name: 'user' });
     },
 });
 
 const { mutate: updateUser, isPending: isPendingUpdateUser } = useMutationUserUpdate(state.id, {
-    onSuccess: (data) => {
+    onSuccess: () => {
         showNotification({
             type: 'success',
             title: 'Sukses Diperbarui',
-            message: `Pengguna berhasi diperbarui - ${data.username}`,
+            message: `Pengguna berhasi diperbarui`,
         });
         navigateTo({ name: 'user' });
     },

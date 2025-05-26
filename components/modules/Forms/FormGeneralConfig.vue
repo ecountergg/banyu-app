@@ -28,22 +28,22 @@ const generalConfigDataTypeList = Object.values(GENERAL_CONFIG_DATA_TYPE).map((s
 
 const { showNotification } = useNotification();
 const { mutate: createGeneralConfig, isPending: isPendingCreateGeneralConfig } = useMutationGeneralConfigCreate({
-    onSuccess: (data) => {
+    onSuccess: () => {
         showNotification({
             type: 'success',
             title: 'Sukses Dibuat',
-            message: `Konfigurasi umum berhasil dibuat - ${data.code}`,
+            message: `Konfigurasi umum berhasil dibuat`,
         });
         navigateTo({ name: 'general-config' });
     },
 });
 
 const { mutate: updateGeneralConfig, isPending: isPendingUpdateGeneralConfig } = useMutationGeneralConfigUpdate(state.code, {
-    onSuccess: (data) => {
+    onSuccess: () => {
         showNotification({
             type: 'success',
             title: 'Sukses Diperbarui',
-            message: `Konfigurasi umum berhasil diperbarui - ${data.code}`,
+            message: `Konfigurasi umum berhasil diperbarui`,
         });
         navigateTo({ name: 'general-config' });
     },

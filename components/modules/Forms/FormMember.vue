@@ -27,22 +27,22 @@ const searchCount = shallowRef<number>(0);
 const { showNotification } = useNotification();
 const { results: areaList, isLoading: isLoadingAreaList } = useQueryAreaList(params, searchCount);
 const { mutate: createMember, isPending: isPendingCreateMember } = useMutationMemberCreate({
-    onSuccess: (data) => {
+    onSuccess: () => {
         showNotification({
             type: 'success',
             title: 'Sukses Dibuat',
-            message: `Member berhasil dibuat - ${data.fullName}`,
+            message: `Member berhasil dibuat`,
         });
         navigateTo({ name: 'member' });
     },
 });
 
 const { mutate: updateMember, isPending: isPendingUpdateMember } = useMutationMemberUpdate(state.id, {
-    onSuccess: (data) => {
+    onSuccess: () => {
         showNotification({
             type: 'success',
             title: 'Sukses Diperbarui',
-            message: `Member berhasil diperbarui - ${data.fullName}`,
+            message: `Member berhasil diperbarui`,
         });
         navigateTo({ name: 'member' });
     },
