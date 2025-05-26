@@ -3,12 +3,10 @@ import type { WaterBillPaidListResponse } from '~/models/WaterBillPaid';
 import { BreadcrumbBuilder } from '~/builders/BreadcrumbBuilder';
 import { TableColumnBuilder } from '~/builders/TableColumnBuilder';
 import VAccordion from '~/components/base/VAccordion/VAccordion.vue';
-import VBadge from '~/components/base/VBadge/VBadge.vue';
 import VLink from '~/components/base/VLink/VLink.vue';
 import VText from '~/components/base/VText/VText.vue';
 import FilterWaterBillPaid from '~/components/modules/Filters/FilterWaterBillPaid.vue';
 import { useQueryWaterBillPaidList } from '~/composables/water-bill-paid/queries/useQueryWaterBillPaidList';
-import { PAID_STATUS, PAID_STATUS_VARIANTS } from '~/constants';
 import { WaterBillPaidPaginationSearchParams } from '~/models/params/WaterBillPaidPaginationSearchParams';
 
 definePageMeta({
@@ -88,31 +86,13 @@ const columns = computed(() =>
             }, () => stringOrFallback(row.areaCode)),
         })
         .setColumn({
-            key: 'areaDescription',
-            sortKey: 'areaDescription',
-            name: 'Deskripsi Area',
-            render: row => h(VText, {
-                as: 'p',
-                variant: 'base',
-            }, () => stringOrFallback(row.areaDescription, '-')),
-        })
-        .setColumn({
             key: 'memberName',
-            sortKey: 'memberName',
+            sortKey: 'm.fullName',
             name: 'Nama Member',
             render: row => h(VText, {
                 as: 'p',
                 variant: 'base',
             }, () => stringOrFallback(row.memberName)),
-        })
-        .setColumn({
-            key: 'status',
-            sortKey: 'status',
-            name: 'Status',
-            render: row => h(VBadge, {
-                variant: PAID_STATUS_VARIANTS[row.status],
-                class: 'w-max',
-            }, () => PAID_STATUS[row.status]),
         })
         .setColumn({
             key: 'createdDate',
@@ -122,15 +102,6 @@ const columns = computed(() =>
                 as: 'p',
                 variant: 'base',
             }, () => formatEpochToDate(row.createdDate)),
-        })
-        .setColumn({
-            key: 'lastModifiedDate',
-            sortKey: 'lastModifiedDate',
-            name: 'Tanggal Diubah',
-            render: row => h(VText, {
-                as: 'p',
-                variant: 'base',
-            }, () => formatEpochToDate(row.lastModifiedDate)),
         })
         .build(),
 );

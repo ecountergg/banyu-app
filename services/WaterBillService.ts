@@ -1,6 +1,6 @@
 import type { WaterBillDto } from '~/models/dtos/WaterBillDto';
 import type { WaterBillPaginationSearchParams } from '~/models/params/WaterBillPaginationSearchParams';
-import type { WaterBillDetailResponse, WaterBillListResponse } from '~/models/WaterBill';
+import type { WaterBillDetailResponse, WaterBillListResponse, WaterBillResponse } from '~/models/WaterBill';
 import type { GenericPagination } from '~/types';
 
 export type WaterBillService = {
@@ -8,4 +8,5 @@ export type WaterBillService = {
     getWaterBillDetail: (id: string) => Promise<WaterBillDetailResponse>;
     getWaterBillDownload: (id: string) => Promise<File>;
     initPaymentWaterBill: (id: string, data: WaterBillDto) => Promise<WaterBillDetailResponse>;
+    deleteWaterBill: (id: string) => Promise<WaterBillResponse>;
 };

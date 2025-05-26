@@ -75,4 +75,13 @@ export class MeterReadingServiceImpl implements MeterReadingService {
     async getMeterReadingEstimateDetail(code: string): Promise<MeterReadingEstimateResponse> {
         return await useNuxtApp().$api<MeterReadingEstimateResponse>(MeterReadingEndpoint.ESTIMATE_BY_ID.replace('[id]', code));
     }
+
+    deleteMeterReading(id: string): Promise<MeterReadingResponse> {
+        return useNuxtApp().$api<MeterReadingResponse>(
+            MeterReadingEndpoint.DELETE.replace('[id]', id),
+            {
+                method: 'DELETE',
+            },
+        );
+    }
 }

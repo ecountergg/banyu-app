@@ -9,6 +9,7 @@ export type MeterReadingService = {
     getMeterReadingDetail: (id: string) => Promise<MeterReadingDetailResponse>;
     createMeterReading: (data: MeterReadingDto) => Promise<MeterReadingResponse>;
     updateMeterReading: (id: string, data: MeterReadingDto) => Promise<MeterReadingResponse>;
+    deleteMeterReading: (id: string) => Promise<MeterReadingResponse>;
     calculate: (data: MeterReadingCalculateDto) => Promise<MeterReadingResponse>;
     calculateByIdMeterReading: (id: string, data: MeterReadingDto) => Promise<MeterReadingResponse>;
     getMeterReadingEstimateDetail: (id: string) => Promise<MeterReadingEstimateResponse>;

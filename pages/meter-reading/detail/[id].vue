@@ -5,6 +5,7 @@ import { BreadcrumbBuilder } from '~/builders/BreadcrumbBuilder';
 import { TableColumnBuilder } from '~/builders/TableColumnBuilder';
 import VText from '~/components/base/VText/VText.vue';
 import { useMutationMeterReadingCalculateById } from '~/composables/meter-reading/mutations/useMutationMeterReadingCalculateById';
+import { useMutateionMeterReadingDelete } from '~/composables/meter-reading/mutations/useMutationMeterReadingDelete';
 import { useMutationGetMeterReadingDetail } from '~/composables/meter-reading/queries/useQueryMeterReadingDetail';
 import { useMutationGetMeterReadingEstimateDetail } from '~/composables/meter-reading/queries/useQueryMeterReadingEstimateDetail';
 import { METER_READING_STATUS, METER_READING_STATUS_VARIANTS, MONTH } from '~/constants';
@@ -41,11 +42,29 @@ const { handleCustomConfirmation } = useDialog();
 const { showNotification } = useNotification();
 const queryClient = useQueryClient();
 const { mutateAsync: getMeterReadingDetail } = useMutationGetMeterReadingDetail();
+const { handleArchiveConfirmation } = useDialog();
+const { mutateAsync: deleteMeterReading } = useMutateionMeterReadingDelete({
+    onSuccess: () => {
+        showNotification({
+            type: 'success',
+            title: 'Hapus berhasil!',
+            message: 'Pembacaan meteran telah dihapus',
+        });
+        queryClient.invalidateQueries({
+            queryKey: ['water-bill-list'],
+        });
+        navigateTo({ name: 'water-bill' });
+    },
+});
 const meterReadingDetail = await getMeterReadingDetail({ id: id.value });
 queryClient.setQueryData(['meter-reading-detail'], meterReadingDetail);
 const { mutateAsync: getMeterReadingEstimateDetail } = useMutationGetMeterReadingEstimateDetail();
 const meterReadingEstimateDetail = await getMeterReadingEstimateDetail({ id: id.value });
 queryClient.setQueryData(['meter-reading-estimate-detail'], meterReadingEstimateDetail);
+
+const handleDelete = handleArchiveConfirmation(async () => {
+    deleteMeterReading(meterReadingDetail.id);
+});
 
 const columns = computed(() =>
     new TableColumnBuilder<MeterReadingEstimateRate>()
@@ -126,6 +145,13 @@ const handleCalculate = handleCustomConfirmation({
                     Kalkulasi
                     <Icon name="lucide:calculator" />
                 </VButton>
+                <VButton
+                    variant="danger"
+                    @click="handleDelete"
+                >
+                    Hapus
+                    <Icon name="lucide:trash" />
+                </VButton>
             </VFlex>
         </template>
         <VCard title="Pembacaan Meteran Detil">
@@ -147,12 +173,6 @@ const handleCalculate = handleCustomConfirmation({
                     title-class="text-secondary"
                 >
                     {{ stringOrFallback(meterReadingDetail.areaCode, '-') }}
-                </VDescription>
-                <VDescription
-                    title="Deskripsi Area"
-                    title-class="text-secondary"
-                >
-                    {{ stringOrFallback(meterReadingDetail.areaDescription, '-') }}
                 </VDescription>
                 <VDescription
                     title="Nama Member"
@@ -178,6 +198,43 @@ const handleCalculate = handleCustomConfirmation({
                 >
                     {{ formatEpochToDate(meterReadingDetail.readingDate) }}
                 </VDescription>
+                <VDescription
+                    title="Catatan"
+                    title-class="text-secondary"
+                >
+                    {{ stringOrFallback(meterReadingDetail.notes, '-') }}
+                </VDescription>
+                <VDescription
+                    title="Status"
+                    title-class="text-secondary"
+                >
+                    <VBadge
+                        :variant="
+                            METER_READING_STATUS_VARIANTS[meterReadingDetail.status]
+                        "
+                    >
+                        {{ METER_READING_STATUS[meterReadingDetail.status] }}
+                    </VBadge>
+                </VDescription>
+                <VDescription
+                    title="Tanggal Diubah"
+                    title-class="text-secondary"
+                >
+                    {{ formatEpochToDate(meterReadingDetail.lastModifiedDate) }}
+                </VDescription>
+            </VGrid>
+        </VCard>
+        <VCard
+            title="Informasi Tambahan"
+            class="mt-4"
+        >
+            <VGrid
+                type="cols"
+                md="3"
+                sm="1"
+                gap="4"
+                class="md:grid-cols-3 sm:grid-cols-1"
+            >
                 <VDescription
                     title="Bacaan Sebelumnya"
                     title-class="text-secondary"
@@ -207,30 +264,6 @@ const handleCalculate = handleCustomConfirmation({
                     title-class="text-secondary"
                 >
                     {{ MONTH[meterReadingDetail.month - 1].label }}
-                </VDescription>
-                <VDescription
-                    title="Catatan"
-                    title-class="text-secondary"
-                >
-                    {{ stringOrFallback(meterReadingDetail.notes, '-') }}
-                </VDescription>
-                <VDescription
-                    title="Status"
-                    title-class="text-secondary"
-                >
-                    <VBadge
-                        :variant="
-                            METER_READING_STATUS_VARIANTS[meterReadingDetail.status]
-                        "
-                    >
-                        {{ METER_READING_STATUS[meterReadingDetail.status] }}
-                    </VBadge>
-                </VDescription>
-                <VDescription
-                    title="Tanggal Diubah"
-                    title-class="text-secondary"
-                >
-                    {{ formatEpochToDate(meterReadingDetail.lastModifiedDate) }}
                 </VDescription>
             </VGrid>
         </VCard>

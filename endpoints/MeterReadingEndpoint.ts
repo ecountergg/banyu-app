@@ -15,6 +15,7 @@ export class MeterReadingEndpoint {
     public static readonly LIST = Endpoint.getPath('');
     public static readonly DETAIL = Endpoint.getPath('[id]');
     public static readonly CREATE = Endpoint.getPath('');
+    public static readonly DELETE = Endpoint.getPath('[id]');
     public static readonly UPDATE = Endpoint.getPath('[id]');
     public static readonly CALCULATE = Endpoint.getPath('/calculate');
     public static readonly CALCULATE_BY_ID = Endpoint.getPath('[id]/calculate');

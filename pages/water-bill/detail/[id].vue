@@ -3,6 +3,7 @@ import type { MeterReadingEstimateRate } from '~/models/MeterReading';
 import { BreadcrumbBuilder } from '~/builders/BreadcrumbBuilder';
 import { TableColumnBuilder } from '~/builders/TableColumnBuilder';
 import VText from '~/components/base/VText/VText.vue';
+import { useMutationWaterBillDelete } from '~/composables/water-bill/mutations/useMutationWaterBillDelete';
 import { useMutationWaterBillInitPayment } from '~/composables/water-bill/mutations/useMutationWaterBillInitPayment';
 import { useMutationGetWaterBillDetail } from '~/composables/water-bill/queries/useQueryWaterBillDetail';
 import { useMutationGetWaterBillDownload } from '~/composables/water-bill/queries/useQueryWaterBillDownload';
@@ -54,6 +55,22 @@ const { mutateAsync: downloadWaterBill } = useMutationGetWaterBillDownload({
         downloadFilePdf(data, `Tagihan berhasil diunduh - ${waterBillDetail.billNumber} - ${formatEpochToDateTime(new Date())}`);
     },
 });
+const { handleArchiveConfirmation } = useDialog();
+
+const { mutateAsync: deleteWaterBill } = useMutationWaterBillDelete({
+    onSuccess: () => {
+        showNotification({
+            type: 'success',
+            title: 'Hapus berhasil!',
+            message: 'Tagihan air telah dihapus',
+        });
+        queryClient.invalidateQueries({
+            queryKey: ['water-bill-list'],
+        });
+        navigateTo({ name: 'water-bill' });
+    },
+});
+
 const handleInitPayment = async () => {
     const response = await handleCustomConfirmationReason({
         title: 'Bayar Tagihan',
@@ -69,6 +86,10 @@ const handleInitPayment = async () => {
         new WaterBillDto().setNotes(response),
     );
 };
+
+const handleDelete = handleArchiveConfirmation(async () => {
+    deleteWaterBill(waterBillDetail.id);
+});
 
 const columns = computed(() =>
     new TableColumnBuilder<MeterReadingEstimateRate>()
@@ -124,6 +145,13 @@ const columns = computed(() =>
                     Unduh Invoice
                     <Icon name="lucide:download" />
                 </VButton>
+                <VButton
+                    variant="danger"
+                    @click="handleDelete"
+                >
+                    Hapus
+                    <Icon name="lucide:trash" />
+                </VButton>
             </VFlex>
         </template>
         <VCard title="Tagihan Detil">
@@ -141,6 +169,18 @@ const columns = computed(() =>
                     {{ stringOrFallback(waterBillDetail.billNumber, '-') }}
                 </VDescription>
                 <VDescription
+                    title="Kode Area"
+                    title-class="text-secondary"
+                >
+                    {{ stringOrFallback(waterBillDetail.areaCode, '-') }}
+                </VDescription>
+                <VDescription
+                    title="Nama Member"
+                    title-class="text-secondary"
+                >
+                    {{ stringOrFallback(waterBillDetail.memberName, '-') }}
+                </VDescription>
+                <VDescription
                     title="Tanggal Tagihan"
                     title-class="text-secondary"
                 >
@@ -153,30 +193,6 @@ const columns = computed(() =>
                     {{ formatEpochToDate(waterBillDetail.dueDate) }}
                 </VDescription>
                 <VDescription
-                    title="No Meter"
-                    title-class="text-secondary"
-                >
-                    {{ stringOrFallback(waterBillDetail.meterNumber, '-') }}
-                </VDescription>
-                <VDescription
-                    title="Kode Area"
-                    title-class="text-secondary"
-                >
-                    {{ stringOrFallback(waterBillDetail.areaCode, '-') }}
-                </VDescription>
-                <VDescription
-                    title="Deskripsi Area"
-                    title-class="text-secondary"
-                >
-                    {{ stringOrFallback(waterBillDetail.areaDescription, '-') }}
-                </VDescription>
-                <VDescription
-                    title="Nama Member"
-                    title-class="text-secondary"
-                >
-                    {{ stringOrFallback(waterBillDetail.memberName, '-') }}
-                </VDescription>
-                <VDescription
                     title="Tahun"
                     title-class="text-secondary"
                 >
@@ -187,24 +203,6 @@ const columns = computed(() =>
                     title-class="text-secondary"
                 >
                     {{ MONTH[waterBillDetail.month - 1].label }}
-                </VDescription>
-                <VDescription
-                    title="Biaya Konsumsi"
-                    title-class="text-secondary"
-                >
-                    {{ formatCurrency(waterBillDetail.consumptionCharge) }}
-                </VDescription>
-                <VDescription
-                    title="Biaya Lainnya"
-                    title-class="text-secondary"
-                >
-                    {{ formatCurrency(waterBillDetail.otherCharges) }}
-                </VDescription>
-                <VDescription
-                    title="Jumlah Total"
-                    title-class="text-secondary"
-                >
-                    {{ formatCurrency(waterBillDetail.totalAmount) }}
                 </VDescription>
                 <VDescription
                     title="Tanggal Dibuat"

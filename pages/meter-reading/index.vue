@@ -55,7 +55,7 @@ const columns = computed(() =>
         })
         .setColumn({
             key: 'areaCode',
-            sortKey: 'areaCode',
+            sortKey: 'a.code',
             name: 'Kode Area',
             render: row => h(VText, {
                 as: 'p',
@@ -64,7 +64,7 @@ const columns = computed(() =>
         })
         .setColumn({
             key: 'memberFullName',
-            sortKey: 'memberFullName',
+            sortKey: 'm.fullName',
             name: 'Nama Member',
             render: row => h(VText, {
                 as: 'p',
@@ -118,7 +118,7 @@ const columns = computed(() =>
         })
         .setColumn({
             key: 'createdDate',
-            sortKey: 'createdDate',
+            sortKey: 'mr.createdDate',
             name: 'Tanggal Dibuat',
             render: row => h(VText, {
                 as: 'p',
@@ -127,7 +127,7 @@ const columns = computed(() =>
         })
         .setColumn({
             key: 'lastModifiedDate',
-            sortKey: 'lastModifiedDate',
+            sortKey: 'mr.modifiedDate',
             name: 'Tanggal Diubah',
             render: row => h(VText, {
                 as: 'p',
