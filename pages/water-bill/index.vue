@@ -77,17 +77,8 @@ const columns = computed(() =>
             }, () => stringOrFallback(row.areaCode)),
         })
         .setColumn({
-            key: 'areaDescription',
-            sortKey: 'areaDescription',
-            name: 'Deskripsi Area',
-            render: row => h(VText, {
-                as: 'p',
-                variant: 'base',
-            }, () => stringOrFallback(row.areaDescription, '-')),
-        })
-        .setColumn({
             key: 'memberName',
-            sortKey: 'memberName',
+            sortKey: 'm.fullName',
             name: 'Nama Member',
             render: row => h(VText, {
                 as: 'p',
@@ -105,7 +96,7 @@ const columns = computed(() =>
         })
         .setColumn({
             key: 'lastModifiedDate',
-            sortKey: 'lastModifiedDate',
+            sortKey: 'wd.modifiedDate',
             name: 'Tanggal Diubah',
             render: row => h(VText, {
                 as: 'p',

@@ -12,7 +12,7 @@ export const useQueryWaterBillPaidList = (
 ) => {
     const waterBillService = new WaterBillPaidServiceImpl();
     const query = useQuery<GenericPagination<WaterBillPaidListResponse[]>>({
-        queryKey: ['water-bill-list', params, searchCount],
+        queryKey: ['water-bill-paid-list', params, searchCount],
         queryFn: () => waterBillService.getWaterBillPaidList(params),
         ...options,
     });

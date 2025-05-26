@@ -134,12 +134,6 @@ const handleActive = handleCustomConfirmation({
                     {{ stringOrFallback(memberDetail.areaCode, '-') }}
                 </VDescription>
                 <VDescription
-                    title="Deskripsi Area"
-                    title-class="text-secondary"
-                >
-                    {{ stringOrFallback(memberDetail.areaDescription, '-') }}
-                </VDescription>
-                <VDescription
                     title="Nama Lengkap"
                     title-class="text-secondary"
                 >

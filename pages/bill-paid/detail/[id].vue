@@ -3,6 +3,7 @@ import type { MeterReadingEstimateRate } from '~/models/MeterReading';
 import { BreadcrumbBuilder } from '~/builders/BreadcrumbBuilder';
 import { TableColumnBuilder } from '~/builders/TableColumnBuilder';
 import VText from '~/components/base/VText/VText.vue';
+import { useMutationWaterBillPaidDelete } from '~/composables/water-bill-paid/mutations/useMutationWaterBillPaidDelete';
 import { useMutationGetWaterBillPaidDetail } from '~/composables/water-bill-paid/queries/useQueryWaterBillPaidDetail';
 import { useMutationGetWaterBillPaidDownload } from '~/composables/water-bill-paid/queries/useQueryWaterBillPaidDownload';
 import { MONTH, PAID_STATUS_VARIANTS } from '~/constants';
@@ -49,6 +50,25 @@ const { mutateAsync: downloadWaterBillPaid } = useMutationGetWaterBillPaidDownlo
 
         downloadFilePdf(data, `Tagihan berhasil diunduh - ${waterBillPaidDetail.billNumber} - ${formatEpochToDateTime(new Date())}`);
     },
+});
+const { handleArchiveConfirmation } = useDialog();
+
+const { mutateAsync: deleteWaterBillPaid } = useMutationWaterBillPaidDelete({
+    onSuccess: () => {
+        showNotification({
+            type: 'success',
+            title: 'Hapus berhasil!',
+            message: 'Tagihan dibayar telah dihapus',
+        });
+        queryClient.invalidateQueries({
+            queryKey: ['water-bill-paid-list'],
+        });
+        navigateTo({ name: 'bill-paid' });
+    },
+});
+
+const handleDelete = handleArchiveConfirmation(async () => {
+    deleteWaterBillPaid(waterBillPaidDetail.id);
 });
 
 const columns = computed(() =>
@@ -98,6 +118,13 @@ const columns = computed(() =>
                     Unduh Invoice
                     <Icon name="lucide:download" />
                 </VButton>
+                <VButton
+                    variant="danger"
+                    @click="handleDelete"
+                >
+                    Hapus
+                    <Icon name="lucide:trash" />
+                </VButton>
             </VFlex>
         </template>
         <VCard title="Tagihan Dibayar Detil">
@@ -133,22 +160,10 @@ const columns = computed(() =>
                     {{ formatEpochToDate(waterBillPaidDetail.paidDate) }}
                 </VDescription>
                 <VDescription
-                    title="No Meter"
-                    title-class="text-secondary"
-                >
-                    {{ stringOrFallback(waterBillPaidDetail.meterNumber, '-') }}
-                </VDescription>
-                <VDescription
                     title="Kode Area"
                     title-class="text-secondary"
                 >
                     {{ stringOrFallback(waterBillPaidDetail.areaCode, '-') }}
-                </VDescription>
-                <VDescription
-                    title="Deskripsi Area"
-                    title-class="text-secondary"
-                >
-                    {{ stringOrFallback(waterBillPaidDetail.areaDescription, '-') }}
                 </VDescription>
                 <VDescription
                     title="Nama Member"
@@ -178,24 +193,6 @@ const columns = computed(() =>
                     title-class="text-secondary"
                 >
                     {{ MONTH[waterBillPaidDetail.month - 1].label }}
-                </VDescription>
-                <VDescription
-                    title="Biaya Konsumsi"
-                    title-class="text-secondary"
-                >
-                    {{ formatCurrency(waterBillPaidDetail.consumptionCharge) }}
-                </VDescription>
-                <VDescription
-                    title="Biaya Lainnya"
-                    title-class="text-secondary"
-                >
-                    {{ formatCurrency(waterBillPaidDetail.otherCharges) }}
-                </VDescription>
-                <VDescription
-                    title="Jumlah Total"
-                    title-class="text-secondary"
-                >
-                    {{ formatCurrency(waterBillPaidDetail.totalAmount) }}
                 </VDescription>
                 <VDescription
                     title="Tanggal Dibuat"

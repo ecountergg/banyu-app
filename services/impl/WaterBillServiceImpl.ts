@@ -1,6 +1,6 @@
 import type { WaterBillDto } from '~/models/dtos/WaterBillDto';
 import type { WaterBillPaginationSearchParams } from '~/models/params/WaterBillPaginationSearchParams';
-import type { WaterBillDetailResponse, WaterBillListResponse } from '~/models/WaterBill';
+import type { WaterBillDetailResponse, WaterBillListResponse, WaterBillResponse } from '~/models/WaterBill';
 import type { WaterBillService } from '~/services/WaterBillService';
 import type { GenericPagination } from '~/types';
 import { useNuxtApp } from '#app';
@@ -36,5 +36,14 @@ export class WaterBillServiceImpl implements WaterBillService {
                 ...data,
             },
         });
+    }
+
+    deleteWaterBill(id: string): Promise<WaterBillResponse> {
+        return useNuxtApp().$api<WaterBillResponse>(
+            WaterBillEndpoint.DELETE.replace('[id]', id),
+            {
+                method: 'DELETE',
+            },
+        );
     }
 }
