@@ -30,22 +30,22 @@ const memberQueryParams = reactive(new MemberPaginationSearchParams());
 const memberSearchCount = shallowRef<number>(0);
 const { results: memberList, isLoading: isLoadingMemberist } = useQueryMemberList(memberQueryParams, memberSearchCount);
 const { mutate: createMeterReading, isPending: isPendingCreateMeterReading } = useMutationMeterReadingCreate({
-    onSuccess: (data) => {
+    onSuccess: () => {
         showNotification({
             type: 'success',
             title: 'Sukses Dibuat',
-            message: `Pembacaan meteran berhasil dibuat - ${data.meterNumber}`,
+            message: `Pembacaan meteran berhasil dibuat`,
         });
         navigateTo({ name: 'meter-reading' });
     },
 });
 
 const { mutate: updateMeterReading, isPending: isPendingUpdateMeterReading } = useMutationMeterReadingUpdate(state.id, {
-    onSuccess: (data) => {
+    onSuccess: () => {
         showNotification({
             type: 'success',
             title: 'Sukses Diperbarui',
-            message: `Pembacaan meteran berhasil diperbarui - ${data.meterNumber}`,
+            message: `Pembacaan meteran berhasil diperbarui`,
         });
         navigateTo({ name: 'meter-reading' });
     },

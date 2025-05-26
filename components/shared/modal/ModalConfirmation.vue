@@ -33,7 +33,7 @@ const validationSchema = computed(() =>
     yup.object({
         reason: yup.string()
             .max(5000, 'The maximum value for approval is a 17-digit number.')
-            .required('Field is required'),
+            .required('Field harus diisi'),
     }),
 );
 

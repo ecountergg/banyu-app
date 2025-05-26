@@ -16,5 +16,5 @@ export class WaterBillEndpoint {
     public static readonly DETAIL = Endpoint.getPath('[id]');
     public static readonly DELETE = Endpoint.getPath('[id]');
     public static readonly DOWNLOAD = Endpoint.getPath('[id]/download');
-    public static readonly INIT_PAYMENT = Endpoint.getPath('[id]/init-payment');
+    public static readonly INIT_PAYMENT = Endpoint.getPath('[billNumber]/init-payment');
 }

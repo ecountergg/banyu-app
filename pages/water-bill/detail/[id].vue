@@ -38,11 +38,19 @@ const id = computed(() => route.params.id.toString());
 pageStore.setTitle('');
 
 const { showNotification } = useNotification();
-const { handleCustomConfirmationReason } = useDialog();
-const { mutate: mutateInitPayment } = useMutationWaterBillInitPayment(id.value);
+const { handleCustomConfirmationReason, handleArchiveConfirmation } = useDialog();
 const queryClient = useQueryClient();
 const { mutateAsync: getWaterBillDetail } = useMutationGetWaterBillDetail();
 const waterBillDetail = await getWaterBillDetail({ id: id.value });
+const { mutate: mutateInitPayment } = useMutationWaterBillInitPayment(waterBillDetail.billNumber, {
+    onSuccess: () => {
+        showNotification({
+            type: 'success',
+            title: 'Sukses Dibayar',
+            message: `Tagihan berhasil dibayar`,
+        });
+    },
+});
 queryClient.setQueryData(['water-bill-detail'], waterBillDetail);
 const { mutateAsync: downloadWaterBill } = useMutationGetWaterBillDownload({
     onSuccess: (data) => {
@@ -55,7 +63,6 @@ const { mutateAsync: downloadWaterBill } = useMutationGetWaterBillDownload({
         downloadFilePdf(data, `Tagihan berhasil diunduh - ${waterBillDetail.billNumber} - ${formatEpochToDateTime(new Date())}`);
     },
 });
-const { handleArchiveConfirmation } = useDialog();
 
 const { mutateAsync: deleteWaterBill } = useMutationWaterBillDelete({
     onSuccess: () => {

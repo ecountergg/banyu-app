@@ -23,22 +23,22 @@ const state = reactive({
 
 const { showNotification } = useNotification();
 const { mutate: createArea, isPending: isPendingCreateArea } = useMutationAreaCreate({
-    onSuccess: (data) => {
+    onSuccess: () => {
         showNotification({
             type: 'success',
             title: 'Sukses Dibuat',
-            message: `Area berhasil dibuat - ${data.code}`,
+            message: `Area berhasil dibuat`,
         });
         navigateTo({ name: 'area' });
     },
 });
 
 const { mutate: updateArea, isPending: isPendingUpdateArea } = useMutationAreaUpdate(state.code, {
-    onSuccess: (data) => {
+    onSuccess: () => {
         showNotification({
             type: 'success',
             title: 'Sukses Diperbarui',
-            message: `Area berhasil diperbarui - ${data.code}`,
+            message: `Area berhasil diperbarui`,
         });
         navigateTo({ name: 'area' });
     },
