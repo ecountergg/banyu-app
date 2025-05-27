@@ -3,7 +3,7 @@ import { PaginationSearchParam } from './PaginationSearchParam';
 
 export class MeterReadingPaginationSearchParams extends PaginationSearchParam {
     areaCode!: Undefined<string[]>;
-    memberId!: Undefined<string>;
+    memberName!: Undefined<string>;
     month!: Undefined<number>;
     year!: Undefined<number>;
     dateStart!: Undefined<number>;
@@ -19,8 +19,8 @@ export class MeterReadingPaginationSearchParams extends PaginationSearchParam {
         return this;
     }
 
-    setMemberId(value: Undefined<string>): this {
-        this.memberId = value;
+    setMemberName(value: Undefined<string>): this {
+        this.memberName = value;
         return this;
     }
 

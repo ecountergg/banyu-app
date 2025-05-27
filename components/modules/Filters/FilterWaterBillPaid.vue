@@ -18,6 +18,14 @@ const memberQueryParams = reactive(new MemberPaginationSearchParams());
 const memberSearchCount = shallowRef<number>(0);
 const { results: areaList, isLoading: isLoadingAreaList } = useQueryAreaList(areaQueryParams, areaSearchCount);
 const { results: memberList, isLoading: isLoadingMemberist } = useQueryMemberList(memberQueryParams, memberSearchCount);
+
+const handleSearchMember = (val?: string) => {
+    memberQueryParams.setFullname(val);
+};
+
+const handleSearchArea = (val?: string) => {
+    areaQueryParams.setCode(val);
+};
 </script>
 
 <template>
@@ -40,6 +48,9 @@ const { results: memberList, isLoading: isLoadingMemberist } = useQueryMemberLis
                 label-key="code"
                 clearable
                 :loading="isLoadingAreaList"
+                as-async
+                searchable
+                @search-change="(val) => handleSearchArea(val)"
             />
             <VSelect
                 v-model:model-value="filter.memberName"
@@ -51,8 +62,10 @@ const { results: memberList, isLoading: isLoadingMemberist } = useQueryMemberLis
                 label-key="fullName"
                 size="lg"
                 clearable
-                :searchable="false"
                 :loading="isLoadingMemberist"
+                searchable
+                as-async
+                @search-change="(val) => handleSearchMember(val)"
             />
             <VSelect
                 v-model:model-value="filter.year"
@@ -64,7 +77,6 @@ const { results: memberList, isLoading: isLoadingMemberist } = useQueryMemberLis
                 label-key="label"
                 size="lg"
                 clearable
-
                 :searchable="false"
             />
             <VSelect

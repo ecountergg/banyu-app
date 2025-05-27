@@ -59,6 +59,10 @@ const { handleSubmit } = useForm({
     validationSchema: toTypedSchema(schema),
 });
 
+const handleSearchArea = (val?: string) => {
+    params.setCode(val);
+};
+
 const onSubmit = handleSubmit(async () => {
     const stateMember = () => {
         return new MemberDto()
@@ -98,9 +102,11 @@ const onSubmit = handleSubmit(async () => {
                     size="lg"
                     required
                     clearable
-                    :searchable="false"
                     :loading="isLoadingAreaList"
                     :disabled="action === 'update'"
+                    searchable
+                    as-async
+                    @search-change="(val) => handleSearchArea(val)"
                 />
                 <VInput
                     v-model="state.fullName"
