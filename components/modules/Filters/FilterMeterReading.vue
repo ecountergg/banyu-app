@@ -64,7 +64,7 @@ const handleSearchMember = (val?: string) => {
                 label="Pilih Member"
                 :options="memberList"
                 placeholder="Mohon pilih member"
-                value-key="fullName"
+                value-key="id"
                 label-key="fullName"
                 size="lg"
                 clearable
