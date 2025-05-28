@@ -44,6 +44,10 @@ const { handleSubmit } = useForm({
     validationSchema: toTypedSchema(schema),
 });
 
+const handleSearchArea = (val?: string) => {
+    params.setCode(val);
+};
+
 const onSubmit = handleSubmit(async () => {
     calculateMeterReading(new MeterReadingCalculateDto().setAreaCode(state.areaCode).setYear(state.year).setMonth(state.month));
 });
@@ -66,8 +70,10 @@ const onSubmit = handleSubmit(async () => {
                 size="lg"
                 required
                 clearable
-                :searchable="false"
                 :loading="isLoadingAreaList"
+                searchable
+                as-async
+                @search-change="(val) => handleSearchArea(val)"
             />
             <VSelect
                 v-model:model-value="state.year"

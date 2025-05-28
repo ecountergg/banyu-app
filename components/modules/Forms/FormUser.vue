@@ -78,6 +78,10 @@ const { handleSubmit } = useForm({
     validationSchema: toTypedSchema(schema),
 });
 
+const handleSearchArea = (val?: string) => {
+    params.setCode(val);
+};
+
 const onSubmit = handleSubmit(async () => {
     const stateUser = () => {
         return new UserDto()
@@ -147,6 +151,9 @@ const onSubmit = handleSubmit(async () => {
                     required
                     clearable
                     :loading="isLoadingAreaList"
+                    as-async
+                    searchable
+                    @search-change="(val) => handleSearchArea(val)"
                 />
             </VFlex>
             <VFlex

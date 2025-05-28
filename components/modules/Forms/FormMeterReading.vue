@@ -63,6 +63,10 @@ const { handleSubmit } = useForm({
     validationSchema: toTypedSchema(schema),
 });
 
+const handleSearchMember = (val?: string) => {
+    memberQueryParams.setFullname(val);
+};
+
 const onSubmit = handleSubmit(async () => {
     const stateMeterReading = () => {
         return new MeterReadingDto()
@@ -96,15 +100,17 @@ const onSubmit = handleSubmit(async () => {
                 <VSelect
                     v-model:model-value="state.meterNumber"
                     name="meterNumber"
-                    label="Pilih Member"
+                    label="Pilih No Meter"
                     :options="memberList"
-                    placeholder="Mohon pilih member"
+                    placeholder="Mohon pilih no meter"
                     value-key="meterNumber"
-                    label-key="fullName"
+                    label-key="meterNumber"
                     size="lg"
                     clearable
-                    :searchable="false"
                     :loading="isLoadingMemberist"
+                    searchable
+                    as-async
+                    @search-change="(val) => handleSearchMember(val)"
                 />
                 <VInputDate
                     v-model="state.readingDate"

@@ -24,6 +24,14 @@ const meterReadingStatusList = Object.values(METER_READING_STATUS).map((status) 
         value: status,
     };
 });
+
+const handleSearchArea = (val?: string) => {
+    areaQueryParams.setCode(val);
+};
+
+const handleSearchMember = (val?: string) => {
+    memberQueryParams.setFullname(val);
+};
 </script>
 
 <template>
@@ -46,19 +54,24 @@ const meterReadingStatusList = Object.values(METER_READING_STATUS).map((status) 
                 label-key="code"
                 clearable
                 :loading="isLoadingAreaList"
+                as-async
+                searchable
+                @search-change="(val) => handleSearchArea(val)"
             />
             <VSelect
-                v-model:model-value="filter.memberId"
-                name="memberId"
+                v-model:model-value="filter.memberName"
+                name="memberName"
                 label="Pilih Member"
                 :options="memberList"
                 placeholder="Mohon pilih member"
-                value-key="id"
+                value-key="fullName"
                 label-key="fullName"
                 size="lg"
                 clearable
-                :searchable="false"
                 :loading="isLoadingMemberist"
+                searchable
+                as-async
+                @search-change="(val) => handleSearchMember(val)"
             />
             <VInputDate
                 v-model="filter.dateStart"

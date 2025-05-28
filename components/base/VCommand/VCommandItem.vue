@@ -21,7 +21,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
 <template>
     <VLibRadixComboboxItem
         v-bind="forwarded"
-        :class="cn('relative flex items-center cursor-default select-none rounded-sm px-2 py-1.5 text-sm outline-none data-[highlighted]:bg-muted-100/80 dark:data-[highlighted]:bg-muted-900 data-[highlighted]:text-muted-600 dark:data-[highlighted]:text-muted-300 data-[disabled]:pointer-events-none data-[disabled]:opacity-50', props.class)"
+        :class="cn('relative !flex items-center cursor-pointer select-none rounded-sm px-2 py-1.5 text-sm outline-none data-[highlighted]:bg-muted-100/80 dark:data-[highlighted]:bg-muted-900 data-[highlighted]:text-muted-600 dark:data-[highlighted]:text-muted-300 data-[disabled]:pointer-events-none data-[disabled]:opacity-50', props.class)"
     >
         <slot />
     </VLibRadixComboboxItem>

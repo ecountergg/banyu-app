@@ -35,7 +35,6 @@ const {
     inputCols = 8,
     labelCols = 4,
     inlineCols = 12,
-    // TODO: Fix searchable
     searchable = false,
     asAsync = false,
     valueKey = 'value',
@@ -180,9 +179,9 @@ watch(state, value => setSelectValue(value));
                                 icon-wrapper-class="pl-3"
                                 @input="(event) => asAsync && emits('searchChange', event.target.value)"
                             />
-                            <VCommandEmpty />
-                            <VCommandList>
-                                <VCommandGroup class="p-2">
+                            <VCommandEmpty v-if="options.length === 0" />
+                            <VCommandList v-if="options.length !== 0">
+                                <VCommandGroup class="p-2 !block">
                                     <VCommandItem
                                         v-for="(option, index) in options"
                                         :key="index"
