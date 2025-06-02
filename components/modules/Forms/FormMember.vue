@@ -53,6 +53,7 @@ const schema = yup.object({
     fullName: yup.string().required('Nama lengkap harus diisi'),
     email: yup.string().email('Format email tidak valid').nullable(),
     mobileNumber: yup.string().nullable(),
+    initialReading: yup.string().nullable(),
 });
 
 const { handleSubmit } = useForm({
@@ -134,6 +135,21 @@ const onSubmit = handleSubmit(async () => {
                         mask: ['+62 ### #### ####'],
                     }"
                     :disabled="action === 'update'"
+                />
+                <VInput
+                    v-if="action === 'create'"
+                    v-model="state.initialReading"
+                    placeholder="0"
+                    name="number"
+                    label="Inisialisasi Meteran"
+                    :required="false"
+                    type="number"
+                    min="0"
+                    :maska-options="{
+                        tokens: {
+                            '#': { pattern: /[1-9]/ },
+                        },
+                    }"
                 />
             </VFlex>
             <VFlex

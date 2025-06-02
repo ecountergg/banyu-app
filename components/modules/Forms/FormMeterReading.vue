@@ -104,7 +104,7 @@ const onSubmit = handleSubmit(async () => {
                     :options="memberList"
                     placeholder="Mohon pilih no meter"
                     value-key="meterNumber"
-                    label-key="meterNumber"
+                    label-key="fullName"
                     size="lg"
                     clearable
                     :loading="isLoadingMemberist"

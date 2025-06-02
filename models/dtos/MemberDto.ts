@@ -3,6 +3,7 @@ export class MemberDto {
     fullName!: string;
     email!: string | null;
     mobileNumber!: string | null;
+    initialReading!: number | null;
 
     setAreaCode(codeArea: string): this {
         this.codeArea = codeArea;
@@ -21,6 +22,11 @@ export class MemberDto {
 
     setMobileNumber(mobileNumber: string | null): this {
         this.mobileNumber = mobileNumber;
+        return this;
+    }
+
+    setInitialReading(initialReading: number | null): this {
+        this.initialReading = initialReading;
         return this;
     }
 }
