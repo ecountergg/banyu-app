@@ -70,7 +70,8 @@ const onSubmit = handleSubmit(async () => {
             .setAreaCode(stringOrEmpty(state.codeArea))
             .setFullname(stringOrEmpty(state.fullName))
             .setEmail(stringOrNull(state.email))
-            .setMobileNumber(stringOrNull(state.mobileNumber));
+            .setMobileNumber(stringOrNull(state.mobileNumber))
+            .setInitialReading(numberOrZero(state.initialReading));
     };
 
     if (data) {
