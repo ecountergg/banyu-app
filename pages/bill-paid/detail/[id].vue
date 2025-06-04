@@ -48,7 +48,7 @@ const { mutateAsync: downloadWaterBillPaid } = useMutationGetWaterBillPaidDownlo
             message: `Tagihan dibayar berhasil diunduh - ${waterBillPaidDetail.billNumber}`,
         });
 
-        downloadFilePdf(data, `Tagihan berhasil diunduh - ${waterBillPaidDetail.billNumber} - ${formatEpochToDateTime(new Date())}`);
+        downloadFilePdf(data, `Tagihan dibayar - ${waterBillPaidDetail.billNumber} - ${formatEpochToDateTime(new Date())}`);
     },
 });
 const { handleArchiveConfirmation } = useDialog();

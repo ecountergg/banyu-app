@@ -34,8 +34,15 @@ const params = reactive(new WaterBillPaginationSearchParams());
 const search = reactive({
     count: 0,
 });
+const modal = reactive({
+    report: false,
+});
 
 const { results, total, isLoading } = useQueryWaterBillList(params, search.count);
+
+const handleDownload = () => {
+    modal.report = true;
+};
 
 const columns = computed(() =>
     new TableColumnBuilder<WaterBillListResponse>()
@@ -109,6 +116,20 @@ const columns = computed(() =>
 
 <template>
     <NuxtLayout name="default">
+        <template #header-actions>
+            <VFlex
+                direction="row"
+                gap="4"
+            >
+                <VButton
+                    variant="info"
+                    @click="handleDownload"
+                >
+                    Untuh Laporan
+                    <Icon name="lucide:download" />
+                </VButton>
+            </VFlex>
+        </template>
         <VAccordion>
             <VAccordionItem value="item-1">
                 <template #title>
@@ -137,5 +158,12 @@ const columns = computed(() =>
             :loading="isLoading"
             class="mt-4"
         />
+
+        <VDialog
+            v-model:open="modal.report"
+            title="Unduh Report"
+        >
+            <FilterDownloadReport @close="modal.report = false" />
+        </VDialog>
     </NuxtLayout>
 </template>

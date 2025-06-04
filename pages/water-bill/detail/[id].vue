@@ -60,7 +60,7 @@ const { mutateAsync: downloadWaterBill } = useMutationGetWaterBillDownload({
             message: `Tagihan berhasil diunduh - ${waterBillDetail.billNumber}`,
         });
 
-        downloadFilePdf(data, `Tagihan berhasil diunduh - ${waterBillDetail.billNumber} - ${formatEpochToDateTime(new Date())}`);
+        downloadFilePdf(data, `Tagihan - ${waterBillDetail.billNumber} - ${formatEpochToDateTime(new Date())}`);
     },
 });
 
